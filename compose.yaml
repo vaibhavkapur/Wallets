@@ -1,0 +1,33 @@
+services:
+  db:
+    image: postgres:17.6-alpine
+    environment:
+      POSTGRES_DB: uno
+      POSTGRES_USER: uno
+      POSTGRES_PASSWORD: uno_local
+    ports:
+      - "127.0.0.1:54328:5432"
+    volumes:
+      - checkout-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U uno -d uno"]
+      interval: 3s
+      timeout: 3s
+      retries: 15
+  app:
+    build: .
+    ports:
+      - "127.0.0.1:8088:8088"
+    environment:
+      ADDR: 0.0.0.0:8088
+      APP_ORIGIN: http://127.0.0.1:8088
+      DATABASE_URL: postgres://uno:uno_local@db:5432/uno?sslmode=disable
+      WEB_DIST: /app/web
+      OPERATOR_TOKEN: local-operator
+      WEBHOOK_SECRET: local-webhook-secret
+      PAYMENT_MODE: sandbox
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  checkout-db:

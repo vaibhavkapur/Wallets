@@ -1,0 +1,1611 @@
+{
+  "components": {
+    "schemas": {
+      "ActionResult": {
+        "additionalProperties": false,
+        "properties": {
+          "enrolled": {
+            "type": "boolean"
+          },
+          "ok": {
+            "type": "boolean"
+          },
+          "paused": {
+            "type": "boolean"
+          },
+          "queued": {
+            "type": "boolean"
+          }
+        },
+        "required": null,
+        "type": "object"
+      },
+      "ApprovalInput": {
+        "additionalProperties": false,
+        "properties": {
+          "version": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "version"
+        ],
+        "type": "object"
+      },
+      "Attempt": {
+        "additionalProperties": false,
+        "properties": {
+          "amount": {
+            "description": "USD cents as a decimal string. Never convert to floating point.",
+            "pattern": "^[0-9]+$",
+            "type": "string"
+          },
+          "card_id": {
+            "type": "string"
+          },
+          "checkout_id": {
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "merchant_id": {
+            "type": "string"
+          },
+          "reserved": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "checkout_id",
+          "status",
+          "amount",
+          "card_id",
+          "merchant_id",
+          "currency",
+          "reserved",
+          "created_at"
+        ],
+        "type": "object"
+      },
+      "Audit": {
+        "additionalProperties": false,
+        "properties": {
+          "at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "entity_id": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "entity_id",
+          "kind",
+          "detail",
+          "at"
+        ],
+        "type": "object"
+      },
+      "Budget": {
+        "additionalProperties": false,
+        "properties": {
+          "available": {
+            "description": "USD cents as a decimal string. Never convert to floating point.",
+            "pattern": "^[0-9]+$",
+            "type": "string"
+          },
+          "limit": {
+            "description": "USD cents as a decimal string. Never convert to floating point.",
+            "pattern": "^[0-9]+$",
+            "type": "string"
+          },
+          "reserved": {
+            "description": "USD cents as a decimal string. Never convert to floating point.",
+            "pattern": "^[0-9]+$",
+            "type": "string"
+          },
+          "spent": {
+            "description": "USD cents as a decimal string. Never convert to floating point.",
+            "pattern": "^[0-9]+$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "limit",
+          "reserved",
+          "spent",
+          "available"
+        ],
+        "type": "object"
+      },
+      "Card": {
+        "additionalProperties": false,
+        "properties": {
+          "color": {
+            "type": "string"
+          },
+          "enrolled": {
+            "type": "boolean"
+          },
+          "id": {
+            "type": "string"
+          },
+          "last4": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "network": {
+            "type": "string"
+          },
+          "protection": {
+            "type": "string"
+          },
+          "rate_bps": {
+            "type": "integer"
+          },
+          "rule_version": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "network",
+          "last4",
+          "color",
+          "rate_bps",
+          "protection",
+          "enrolled",
+          "rule_version"
+        ],
+        "type": "object"
+      },
+      "ChallengeInput": {
+        "additionalProperties": false,
+        "properties": {
+          "success": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "success"
+        ],
+        "type": "object"
+      },
+      "Checkout": {
+        "additionalProperties": false,
+        "properties": {
+          "approval_id": {
+            "type": "string"
+          },
+          "attempt_id": {
+            "type": "string"
+          },
+          "card_id": {
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "intent": {
+            "$ref": "#/components/schemas/Intent"
+          },
+          "order_id": {
+            "type": "string"
+          },
+          "quote": {
+            "$ref": "#/components/schemas/Quote"
+          },
+          "quotes": {
+            "items": {
+              "$ref": "#/components/schemas/Quote"
+            },
+            "type": "array"
+          },
+          "rankings": {
+            "items": {
+              "$ref": "#/components/schemas/Ranking"
+            },
+            "type": "array"
+          },
+          "scenario": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "intent",
+          "quotes",
+          "quote",
+          "card_id",
+          "rankings",
+          "version",
+          "state",
+          "approval_id",
+          "attempt_id",
+          "order_id",
+          "scenario",
+          "created_at"
+        ],
+        "type": "object"
+      },
+      "Consent": {
+        "additionalProperties": false,
+        "properties": {
+          "checkout_id": {
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "expires_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "fingerprint": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "revoked": {
+            "type": "boolean"
+          },
+          "version": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "checkout_id",
+          "version",
+          "fingerprint",
+          "expires_at",
+          "revoked",
+          "created_at"
+        ],
+        "type": "object"
+      },
+      "Dashboard": {
+        "additionalProperties": false,
+        "properties": {
+          "attempts": {
+            "items": {
+              "$ref": "#/components/schemas/Attempt"
+            },
+            "type": "array"
+          },
+          "audit": {
+            "items": {
+              "$ref": "#/components/schemas/Audit"
+            },
+            "type": "array"
+          },
+          "budget": {
+            "$ref": "#/components/schemas/Budget"
+          },
+          "cards": {
+            "items": {
+              "$ref": "#/components/schemas/Card"
+            },
+            "type": "array"
+          },
+          "checkouts": {
+            "items": {
+              "$ref": "#/components/schemas/Checkout"
+            },
+            "type": "array"
+          },
+          "jobs": {
+            "items": {
+              "$ref": "#/components/schemas/Job"
+            },
+            "type": "array"
+          },
+          "ledger": {
+            "items": {
+              "$ref": "#/components/schemas/LedgerEntry"
+            },
+            "type": "array"
+          },
+          "mode": {
+            "type": "string"
+          },
+          "orders": {
+            "items": {
+              "$ref": "#/components/schemas/Order"
+            },
+            "type": "array"
+          },
+          "paused": {
+            "type": "boolean"
+          },
+          "products": {
+            "items": {
+              "$ref": "#/components/schemas/Product"
+            },
+            "type": "array"
+          },
+          "refunds": {
+            "items": {
+              "$ref": "#/components/schemas/Refund"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "mode",
+          "products",
+          "cards",
+          "checkouts",
+          "orders",
+          "refunds",
+          "attempts",
+          "audit",
+          "ledger",
+          "jobs",
+          "budget",
+          "paused"
+        ],
+        "type": "object"
+      },
+      "Error": {
+        "additionalProperties": false,
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "error",
+          "message"
+        ],
+        "type": "object"
+      },
+      "ExecuteInput": {
+        "additionalProperties": false,
+        "properties": {
+          "approval_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "approval_id"
+        ],
+        "type": "object"
+      },
+      "Intent": {
+        "additionalProperties": false,
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "max_total": {
+            "description": "USD cents as a decimal string. Never convert to floating point.",
+            "pattern": "^[0-9]+$",
+            "type": "string"
+          },
+          "postal_code": {
+            "type": "string"
+          },
+          "product_id": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer"
+          },
+          "variant": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "product_id",
+          "variant",
+          "quantity",
+          "max_total",
+          "postal_code",
+          "created_at"
+        ],
+        "type": "object"
+      },
+      "IntentInput": {
+        "additionalProperties": false,
+        "properties": {
+          "max_total": {
+            "description": "USD cents as a decimal string. Never convert to floating point.",
+            "pattern": "^[0-9]+$",
+            "type": "string"
+          },
+          "postal_code": {
+            "type": "string"
+          },
+          "product_id": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer"
+          },
+          "variant": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "product_id",
+          "variant",
+          "quantity",
+          "max_total",
+          "postal_code"
+        ],
+        "type": "object"
+      },
+      "Job": {
+        "additionalProperties": false,
+        "properties": {
+          "attempts": {
+            "type": "integer"
+          },
+          "entity_id": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "lease_until": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "next_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "entity_id",
+          "status",
+          "attempts",
+          "lease_until",
+          "next_at"
+        ],
+        "type": "object"
+      },
+      "LedgerEntry": {
+        "additionalProperties": false,
+        "properties": {
+          "amount": {
+            "description": "USD cents as a decimal string. Never convert to floating point.",
+            "pattern": "^[0-9]+$",
+            "type": "string"
+          },
+          "at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "entity_id": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "entity_id",
+          "kind",
+          "amount",
+          "at"
+        ],
+        "type": "object"
+      },
+      "Order": {
+        "additionalProperties": false,
+        "properties": {
+          "card_last4": {
+            "type": "string"
+          },
+          "card_name": {
+            "type": "string"
+          },
+          "checkout_id": {
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "delivered_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "delivery": {
+            "type": "string"
+          },
+          "fulfillment_status": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "merchant": {
+            "type": "string"
+          },
+          "payment_status": {
+            "type": "string"
+          },
+          "product": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer"
+          },
+          "refunded": {
+            "description": "USD cents as a decimal string. Never convert to floating point.",
+            "pattern": "^[0-9]+$",
+            "type": "string"
+          },
+          "reward": {
+            "description": "USD cents as a decimal string. Never convert to floating point.",
+            "pattern": "^[0-9]+$",
+            "type": "string"
+          },
+          "total": {
+            "description": "USD cents as a decimal string. Never convert to floating point.",
+            "pattern": "^[0-9]+$",
+            "type": "string"
+          },
+          "variant": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "checkout_id",
+          "product",
+          "variant",
+          "quantity",
+          "merchant",
+          "total",
+          "reward",
+          "refunded",
+          "payment_status",
+          "fulfillment_status",
+          "card_name",
+          "card_last4",
+          "delivery",
+          "delivered_at",
+          "created_at"
+        ],
+        "type": "object"
+      },
+      "PauseInput": {
+        "additionalProperties": false,
+        "properties": {
+          "paused": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "paused"
+        ],
+        "type": "object"
+      },
+      "Product": {
+        "additionalProperties": false,
+        "properties": {
+          "brand": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "price": {
+            "description": "USD cents as a decimal string. Never convert to floating point.",
+            "pattern": "^[0-9]+$",
+            "type": "string"
+          },
+          "variants": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "brand",
+          "description",
+          "price",
+          "variants"
+        ],
+        "type": "object"
+      },
+      "Quote": {
+        "additionalProperties": false,
+        "properties": {
+          "currency": {
+            "type": "string"
+          },
+          "delivery": {
+            "type": "string"
+          },
+          "expires_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "in_stock": {
+            "type": "boolean"
+          },
+          "merchant": {
+            "type": "string"
+          },
+          "merchant_id": {
+            "type": "string"
+          },
+          "networks": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "return_terms": {
+            "type": "string"
+          },
+          "shipping": {
+            "description": "USD cents as a decimal string. Never convert to floating point.",
+            "pattern": "^[0-9]+$",
+            "type": "string"
+          },
+          "subtotal": {
+            "description": "USD cents as a decimal string. Never convert to floating point.",
+            "pattern": "^[0-9]+$",
+            "type": "string"
+          },
+          "tax": {
+            "description": "USD cents as a decimal string. Never convert to floating point.",
+            "pattern": "^[0-9]+$",
+            "type": "string"
+          },
+          "total": {
+            "description": "USD cents as a decimal string. Never convert to floating point.",
+            "pattern": "^[0-9]+$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "merchant_id",
+          "merchant",
+          "subtotal",
+          "shipping",
+          "tax",
+          "total",
+          "currency",
+          "delivery",
+          "return_terms",
+          "in_stock",
+          "networks",
+          "expires_at"
+        ],
+        "type": "object"
+      },
+      "Ranking": {
+        "additionalProperties": false,
+        "properties": {
+          "card": {
+            "$ref": "#/components/schemas/Card"
+          },
+          "effective_total": {
+            "description": "USD cents as a decimal string. Never convert to floating point.",
+            "pattern": "^[0-9]+$",
+            "type": "string"
+          },
+          "eligible": {
+            "type": "boolean"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "reward": {
+            "description": "USD cents as a decimal string. Never convert to floating point.",
+            "pattern": "^[0-9]+$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "card",
+          "reward",
+          "effective_total",
+          "eligible",
+          "reason"
+        ],
+        "type": "object"
+      },
+      "Refund": {
+        "additionalProperties": false,
+        "properties": {
+          "amount": {
+            "description": "USD cents as a decimal string. Never convert to floating point.",
+            "pattern": "^[0-9]+$",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "order_id": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "order_id",
+          "amount",
+          "reason",
+          "status",
+          "created_at"
+        ],
+        "type": "object"
+      },
+      "RefundInput": {
+        "additionalProperties": false,
+        "properties": {
+          "amount": {
+            "description": "USD cents as a decimal string. Never convert to floating point.",
+            "pattern": "^[0-9]+$",
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "amount",
+          "reason"
+        ],
+        "type": "object"
+      },
+      "SelectionInput": {
+        "additionalProperties": false,
+        "properties": {
+          "card_id": {
+            "type": "string"
+          },
+          "merchant_id": {
+            "type": "string"
+          },
+          "scenario": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "version",
+          "merchant_id",
+          "card_id",
+          "scenario"
+        ],
+        "type": "object"
+      },
+      "Session": {
+        "additionalProperties": false,
+        "properties": {
+          "mode": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "mode",
+          "role",
+          "name"
+        ],
+        "type": "object"
+      },
+      "SessionInput": {
+        "additionalProperties": false,
+        "properties": {
+          "role": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          }
+        },
+        "required": null,
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "session": {
+        "in": "cookie",
+        "name": "uno_session",
+        "type": "apiKey"
+      }
+    }
+  },
+  "info": {
+    "description": "Sandbox-only application API. The provider webhook uses timestamped HMAC; see README.",
+    "title": "Uno Agent Checkout",
+    "version": "1.0.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/v1/cards/{id}/enroll": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionResult"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Application error"
+          }
+        }
+      }
+    },
+    "/v1/checkouts/{id}": {
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Checkout"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Application error"
+          }
+        }
+      }
+    },
+    "/v1/checkouts/{id}/approval": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApprovalInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Consent"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Application error"
+          }
+        }
+      }
+    },
+    "/v1/checkouts/{id}/cancel": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionResult"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Application error"
+          }
+        }
+      }
+    },
+    "/v1/checkouts/{id}/challenge": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChallengeInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionResult"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Application error"
+          }
+        }
+      }
+    },
+    "/v1/checkouts/{id}/execute": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "maxLength": 128,
+              "minLength": 8,
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExecuteInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Checkout"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Application error"
+          }
+        }
+      }
+    },
+    "/v1/checkouts/{id}/reconcile": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionResult"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Application error"
+          }
+        }
+      }
+    },
+    "/v1/checkouts/{id}/selection": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SelectionInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Checkout"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Application error"
+          }
+        }
+      }
+    },
+    "/v1/dashboard": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dashboard"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Application error"
+          }
+        }
+      }
+    },
+    "/v1/operator/orders/{id}/advance": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionResult"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Application error"
+          }
+        }
+      }
+    },
+    "/v1/operator/pause": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PauseInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionResult"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Application error"
+          }
+        }
+      }
+    },
+    "/v1/orders/{id}": {
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Order"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Application error"
+          }
+        }
+      }
+    },
+    "/v1/orders/{id}/cancel": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "maxLength": 128,
+              "minLength": 8,
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefundInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Refund"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Application error"
+          }
+        }
+      }
+    },
+    "/v1/orders/{id}/refund-requests": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "maxLength": 128,
+              "minLength": 8,
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefundInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Refund"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Application error"
+          }
+        }
+      }
+    },
+    "/v1/purchase-intents": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IntentInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Intent"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Application error"
+          }
+        }
+      }
+    },
+    "/v1/purchase-intents/{id}/quotes": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Checkout"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Application error"
+          }
+        }
+      }
+    },
+    "/v1/session": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SessionInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Application error"
+          }
+        },
+        "security": []
+      }
+    }
+  },
+  "security": [
+    {
+      "session": []
+    }
+  ]
+}
