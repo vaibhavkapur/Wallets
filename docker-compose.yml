@@ -1,0 +1,70 @@
+# Local stack with a real PostgreSQL. For a zero-dependency run use
+# scripts/dev-up.sh instead (embedded PostgreSQL).
+#
+#   docker compose up --build
+#
+# Secrets below are development placeholders. Set real values via a .env
+# file or your orchestrator before any non-local use.
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: asa
+      POSTGRES_PASSWORD: asa
+      POSTGRES_DB: asa
+    ports: ["5432:5432"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U asa"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+
+  controlplane:
+    build: { context: ./control-plane, dockerfile: Dockerfile, target: controlplane }
+    environment:
+      DATABASE_URL: postgres://asa:asa@postgres:5432/asa?sslmode=disable
+      LISTEN_ADDR: ":8080"
+      INTERNAL_TOKEN: ${INTERNAL_TOKEN:-dev-internal-token}
+      OPERATOR_TOKEN: ${OPERATOR_TOKEN:-}
+      GRANT_SIGNING_SEED: ${GRANT_SIGNING_SEED:-}
+      ALLOWED_ORIGINS: http://localhost:5173,http://127.0.0.1:5173
+      FACILITATOR_URL: http://mockresource:9402
+      RUN_WORKERS: "true"
+    ports: ["8080:8080"]
+    depends_on:
+      postgres: { condition: service_healthy }
+
+  mocksigner:
+    build: { context: ./control-plane, dockerfile: Dockerfile, target: mocksigner }
+    environment:
+      LISTEN_ADDR: ":9403"
+      SIGNER_TOKEN: ${SIGNER_TOKEN:-dev-signer-token}
+      ALLOWED_TO: ${PAY_TO:-0x209693Bc6afc0C5328bA36FaF03C514EF312287C}
+    ports: ["9403:9403"]
+
+  mockresource:
+    build: { context: ./control-plane, dockerfile: Dockerfile, target: mockresource }
+    environment:
+      LISTEN_ADDR: ":9402"
+      PAY_TO: ${PAY_TO:-0x209693Bc6afc0C5328bA36FaF03C514EF312287C}
+      PUBLIC_URL: http://mockresource:9402
+    ports: ["9402:9402"]
+
+  gateway:
+    build: ./gateway
+    environment:
+      LISTEN_ADDR: 0.0.0.0:8402
+      CONTROL_PLANE_URL: http://controlplane:8080
+      INTERNAL_TOKEN: ${INTERNAL_TOKEN:-dev-internal-token}
+      SIGNER_URL: http://mocksigner:9403
+      SIGNER_TOKEN: ${SIGNER_TOKEN:-dev-signer-token}
+      # Development only: the mock resource lives on the private compose network.
+      ALLOW_HTTP: "true"
+      ALLOW_PRIVATE_TARGETS: "true"
+      RUST_LOG: info
+    ports: ["8402:8402"]
+    depends_on: [controlplane, mocksigner]
+
+volumes:
+  pgdata: {}

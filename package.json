@@ -1,0 +1,21 @@
+{
+  "name": "agent-spending-accounts",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Agent Spending Accounts — TypeScript workspace (SDK, MCP adapter, dashboard, examples)",
+  "workspaces": [
+    "sdk",
+    "mcp",
+    "dashboard",
+    "examples/research-agent"
+  ],
+  "scripts": {
+    "build": "npm run build -w sdk && npm run build -w mcp && npm run build -w dashboard && npm run build -w examples/research-agent",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
