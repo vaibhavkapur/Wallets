@@ -1,0 +1,27 @@
+[package]
+name = "optimizer-service"
+description = "Stateless internal HTTP service around the optimizer calculation engine"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[[bin]]
+name = "optimizer-engine"
+path = "src/main.rs"
+
+[dependencies]
+optimizer-core = { path = "../optimizer-core" }
+serde.workspace = true
+serde_json.workspace = true
+schemars.workspace = true
+axum = { version = "0.8", default-features = false, features = ["http1", "json", "tokio"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "net", "signal"] }
+sha2 = "0.10"
+subtle = "2"
+hex = "0.4"
+
+[dev-dependencies]
+tower = { version = "0.5", features = ["util"] }
+http-body-util = "0.1"

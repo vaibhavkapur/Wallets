@@ -1,0 +1,522 @@
+openapi: 3.1.0
+info:
+  title: Card-versus-Stablecoin Payment Optimizer API
+  version: "1.0"
+  description: |
+    Deterministic evaluation API. Every amount is an integer in base units
+    encoded as a decimal string; comparable values are micro-USD strings.
+    Clients must never convert them to floating-point numbers.
+
+    Recommendation access (`evaluations:*`, `preferences:*`) and execution
+    access (`handoffs:*`, `outcomes:write`) are separate scopes. Evaluation
+    and handoff identifiers are never payment credentials. An evaluation is a
+    recommendation only: producing one charges nobody and realizes no saving.
+servers:
+  - url: http://127.0.0.1:8080
+security:
+  - bearerApiKey: []
+paths:
+  /healthz:
+    get:
+      summary: Liveness
+      security: []
+      responses:
+        "200":
+          description: OK
+  /v1/meta:
+    get:
+      summary: Mode, tenant and scopes of the presented key
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [mode, tenant_id, scopes]
+                properties:
+                  mode: { $ref: "#/components/schemas/Mode" }
+                  tenant_id: { type: string }
+                  scopes: { type: array, items: { type: string } }
+  /v1/catalog/baskets:
+    get:
+      summary: Baskets the quote provider can quote
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [baskets]
+                properties:
+                  baskets:
+                    type: array
+                    items: { $ref: "#/components/schemas/BasketInfo" }
+  /v1/evaluations:
+    post:
+      summary: Evaluate a basket against current quotes and preferences
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/EvaluateInput" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Evaluation" }
+        "200":
+          description: "Idempotent replay (header Idempotent-Replay: true)"
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Evaluation" }
+        "404": { $ref: "#/components/responses/Error" }
+        "409": { $ref: "#/components/responses/Error" }
+        "502": { $ref: "#/components/responses/Error" }
+        "503": { $ref: "#/components/responses/Error" }
+  /v1/evaluations/{id}:
+    get:
+      summary: Return a versioned result with explanations
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Evaluation" }
+        "404": { $ref: "#/components/responses/Error" }
+  /v1/evaluations/{id}/refresh:
+    post:
+      summary: Obtain fresh quotes and a new evaluation linked to this one
+      parameters:
+        - $ref: "#/components/parameters/Id"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Evaluation" }
+        "404": { $ref: "#/components/responses/Error" }
+  /v1/evaluations/{id}/execution-handoffs:
+    post:
+      summary: Create a constrained reference for an approved payment
+      description: |
+        Requires assisted mode and an `Idempotency-Key`. The approval must
+        name the evaluation's customer and exactly the amount due computed for
+        the chosen eligible option. One unresolved attempt per customer and
+        basket is allowed; a second attempt, on any rail, is refused until the
+        first is reconciled.
+      parameters:
+        - $ref: "#/components/parameters/Id"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/HandoffInput" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Handoff" }
+        "200":
+          description: Idempotent replay
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Handoff" }
+        "409":
+          description: |
+            shadow_mode, evaluation_expired, evaluation_not_executable,
+            option_not_eligible, approval_mismatch, approval_out_of_window,
+            prior_attempt_unresolved, idempotency_key_reused
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ErrorBody" }
+        "422": { $ref: "#/components/responses/Error" }
+  /v1/execution-handoffs/{id}:
+    get:
+      summary: Revalidate a handoff before executing it
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Handoff" }
+        "404": { $ref: "#/components/responses/Error" }
+  /v1/outcomes:
+    post:
+      summary: Record an authenticated provider or executor outcome
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/OutcomeInput" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Outcome" }
+        "200":
+          description: The event was already recorded
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Outcome" }
+        "409": { $ref: "#/components/responses/Error" }
+  /v1/customers/{id}/preferences:
+    get:
+      summary: Current preferences (defaults when none are stored)
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PreferencesView" }
+    put:
+      summary: Store a new immutable preference version
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CustomerPreferences" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PreferencesView" }
+        "422": { $ref: "#/components/responses/Error" }
+  /v1/reports/summary:
+    get:
+      summary: Coverage, selection, quote-to-execution differences and savings
+      parameters:
+        - { name: from, in: query, schema: { type: string, format: date-time } }
+        - { name: to, in: query, schema: { type: string, format: date-time } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Summary" }
+components:
+  securitySchemes:
+    bearerApiKey:
+      type: http
+      scheme: bearer
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      schema: { type: string }
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: false
+      schema: { type: string }
+  responses:
+    Error:
+      description: Error
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorBody" }
+  schemas:
+    Units:
+      type: string
+      pattern: "^(0|[1-9][0-9]{0,38})$"
+      description: Non-negative integer as a decimal string.
+    MicroUsd:
+      type: string
+      pattern: "^(0|-?[1-9][0-9]{0,38})$"
+      description: Signed micro-USD (1 USD = 1000000) as a decimal string.
+    Mode:
+      type: string
+      enum: [shadow, assisted]
+    AssetRef:
+      type: object
+      required: [code, decimals]
+      properties:
+        code: { type: string }
+        network: { type: [string, "null"] }
+        decimals: { type: integer, minimum: 0, maximum: 18 }
+    Amount:
+      type: object
+      required: [asset, base_units]
+      properties:
+        asset: { $ref: "#/components/schemas/AssetRef" }
+        base_units: { $ref: "#/components/schemas/Units" }
+    ErrorBody:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code: { type: string }
+            message: { type: string }
+    BasketLine:
+      type: object
+      required: [sku, description, quantity, unit_price_minor]
+      properties:
+        sku: { type: string }
+        description: { type: string }
+        quantity: { type: integer }
+        unit_price_minor: { $ref: "#/components/schemas/Units" }
+    BasketInfo:
+      type: object
+      required: [merchant_id, merchant_name, basket_ref, title, lines, synthetic]
+      properties:
+        merchant_id: { type: string }
+        merchant_name: { type: string }
+        basket_ref: { type: string }
+        title: { type: string }
+        lines:
+          type: array
+          items: { $ref: "#/components/schemas/BasketLine" }
+        synthetic:
+          type: boolean
+          description: True for illustrative data that is not a provider quote.
+    BasketSnapshot:
+      allOf:
+        - $ref: "#/components/schemas/BasketInfo"
+        - type: object
+          required: [basket_id, basket_hash, provider]
+          properties:
+            basket_id: { type: string }
+            basket_hash: { type: string }
+            provider: { type: string }
+    EvaluateInput:
+      type: object
+      required: [customer_id, merchant_id, basket_ref]
+      properties:
+        customer_id: { type: string }
+        merchant_id: { type: string }
+        basket_ref: { type: string }
+        attribution:
+          type: object
+          additionalProperties: true
+          description: Opaque experiment metadata stored with the evaluation.
+    Versions:
+      type: object
+      required: [contract, engine, formula, rounding, policy, preference]
+      properties:
+        contract: { type: string }
+        engine: { type: string }
+        formula: { type: string }
+        rounding: { type: string }
+        policy: { type: string }
+        preference: { type: string }
+    Evaluation:
+      type: object
+      required:
+        [id, customer_id, merchant_id, basket, mode, status, disclosure, refreshed_from,
+         preference_policy_id, input_sha256, versions, warnings, evaluated_at, expires_at, created_at, result]
+      properties:
+        id: { type: string }
+        customer_id: { type: string }
+        merchant_id: { type: string }
+        basket: { $ref: "#/components/schemas/BasketSnapshot" }
+        mode: { $ref: "#/components/schemas/Mode" }
+        status:
+          type: string
+          enum: [current, expired]
+        disclosure:
+          type: string
+          enum: [recommendation_only]
+          description: No payment was made and no saving was realized by this evaluation.
+        refreshed_from: { type: [string, "null"] }
+        preference_policy_id: { type: [string, "null"] }
+        input_sha256: { type: string }
+        versions: { $ref: "#/components/schemas/Versions" }
+        warnings:
+          type: array
+          items: { type: string }
+        evaluated_at: { type: string, format: date-time }
+        expires_at: { type: [string, "null"], format: date-time }
+        created_at: { type: string, format: date-time }
+        result:
+          type: object
+          additionalProperties: true
+          description: The engine's EvaluationResponse (contracts/engine-v1.schema.json), verbatim.
+    Approval:
+      type: object
+      required: [customer_id, approved_at, approved_amount, reference]
+      properties:
+        customer_id: { type: string }
+        approved_at: { type: string, format: date-time }
+        approved_amount: { $ref: "#/components/schemas/Amount" }
+        reference: { type: string }
+    HandoffInput:
+      type: object
+      required: [option_id, approval]
+      properties:
+        option_id: { type: string }
+        approval: { $ref: "#/components/schemas/Approval" }
+    Handoff:
+      type: object
+      required:
+        [id, evaluation_id, customer_id, merchant_id, basket_hash, option_id, rail, quote_id, amount,
+         approval, status, executable, not_executable_reason, expires_at, created_at, updated_at]
+      properties:
+        id: { type: string }
+        evaluation_id: { type: string }
+        customer_id: { type: string }
+        merchant_id: { type: string }
+        basket_hash: { type: string }
+        option_id: { type: string }
+        rail: { type: string, enum: [card, stablecoin] }
+        quote_id: { type: string }
+        amount: { $ref: "#/components/schemas/Amount" }
+        approval: { $ref: "#/components/schemas/Approval" }
+        status: { type: string, enum: [created, succeeded, failed, unknown] }
+        executable: { type: boolean }
+        not_executable_reason: { type: [string, "null"] }
+        expires_at: { type: string, format: date-time }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+    RefundDetails:
+      type: object
+      required: [amount]
+      properties:
+        amount: { $ref: "#/components/schemas/Amount" }
+        conversion_cost:
+          oneOf:
+            - $ref: "#/components/schemas/Amount"
+            - type: "null"
+        initiated_at: { type: [string, "null"], format: date-time }
+        completed_at: { type: [string, "null"], format: date-time }
+    OutcomeInput:
+      type: object
+      required: [evaluation_id, source, event_id, type, status, option_id, occurred_at]
+      properties:
+        evaluation_id: { type: string }
+        handoff_id: { type: [string, "null"] }
+        source: { type: string, enum: [provider, executor, customer_report] }
+        event_id: { type: string }
+        type: { type: string, enum: [payment, refund] }
+        status: { type: string, enum: [succeeded, failed, unknown] }
+        option_id: { type: string }
+        occurred_at: { type: string, format: date-time }
+        charged:
+          oneOf:
+            - $ref: "#/components/schemas/Amount"
+            - type: "null"
+        refund:
+          oneOf:
+            - $ref: "#/components/schemas/RefundDetails"
+            - type: "null"
+    Outcome:
+      type: object
+      required: [id, evaluation_id, handoff_id, source, event_id, type, status, option_id, occurred_at, recorded_at, derived]
+      properties:
+        id: { type: string }
+        evaluation_id: { type: string }
+        handoff_id: { type: [string, "null"] }
+        source: { type: string }
+        event_id: { type: string }
+        type: { type: string }
+        status: { type: string }
+        option_id: { type: string }
+        occurred_at: { type: string, format: date-time }
+        recorded_at: { type: string, format: date-time }
+        derived:
+          type: object
+          additionalProperties: true
+          description: PaymentDerived or RefundDerived; realized and estimated amounts are separate fields.
+    PointValuation:
+      type: object
+      required: [program_id, valuation_version, micro_usd_per_point, stability]
+      properties:
+        program_id: { type: string }
+        valuation_version: { type: string }
+        micro_usd_per_point: { $ref: "#/components/schemas/Units" }
+        stability: { type: string, enum: [stable, unstable] }
+    CustomerPreferences:
+      type: object
+      required:
+        [default_option_id, min_savings_threshold_minor, consented_rails, consent_funding_step, allowed_rails,
+         require_purchase_protection, avoid_credit, liquidity_reserves, point_valuations]
+      properties:
+        default_option_id: { type: [string, "null"] }
+        min_savings_threshold_minor: { $ref: "#/components/schemas/Units" }
+        consented_rails:
+          type: array
+          items: { type: string, enum: [card, stablecoin] }
+        consent_funding_step: { type: boolean }
+        allowed_rails:
+          type: [array, "null"]
+          items: { type: string, enum: [card, stablecoin] }
+        require_purchase_protection: { type: boolean }
+        avoid_credit: { type: boolean }
+        liquidity_reserves:
+          type: array
+          items: { $ref: "#/components/schemas/Amount" }
+        point_valuations:
+          type: array
+          items: { $ref: "#/components/schemas/PointValuation" }
+    PreferencesView:
+      type: object
+      required: [customer_id, policy_id, version, is_default, preferences]
+      properties:
+        customer_id: { type: string }
+        policy_id: { type: [string, "null"] }
+        version: { type: integer }
+        is_default: { type: boolean }
+        preferences: { $ref: "#/components/schemas/CustomerPreferences" }
+    Summary:
+      type: object
+      required: [from, to, evaluations, handoffs, outcomes]
+      properties:
+        from: { type: string, format: date-time }
+        to: { type: string, format: date-time }
+        evaluations:
+          type: object
+          required: [total, by_outcome, by_mode, recommended, recommended_non_baseline, exclusion_codes, warnings]
+          properties:
+            total: { type: integer }
+            by_outcome: { type: object, additionalProperties: { type: integer } }
+            by_mode: { type: object, additionalProperties: { type: integer } }
+            recommended: { type: integer }
+            recommended_non_baseline: { type: integer }
+            exclusion_codes: { type: object, additionalProperties: { type: integer } }
+            warnings: { type: object, additionalProperties: { type: integer } }
+        handoffs:
+          type: object
+          required: [total, by_status, chose_preferred, chose_baseline, unresolved]
+          properties:
+            total: { type: integer }
+            by_status: { type: object, additionalProperties: { type: integer } }
+            chose_preferred: { type: integer }
+            chose_baseline: { type: integer }
+            unresolved: { type: integer }
+        outcomes:
+          type: object
+          required:
+            [payments_succeeded, payments_failed, payments_unknown, refunds, charge_differs_from_estimate,
+             realized_immediate_savings_micro_usd, realized_savings_count, estimated_rewards_micro_usd,
+             shadow_selections, shadow_followed_recommendation]
+          properties:
+            payments_succeeded: { type: integer }
+            payments_failed: { type: integer }
+            payments_unknown: { type: integer }
+            refunds: { type: integer }
+            charge_differs_from_estimate: { type: integer }
+            realized_immediate_savings_micro_usd: { $ref: "#/components/schemas/MicroUsd" }
+            realized_savings_count: { type: integer }
+            estimated_rewards_micro_usd: { $ref: "#/components/schemas/MicroUsd" }
+            shadow_selections: { type: integer }
+            shadow_followed_recommendation: { type: integer }

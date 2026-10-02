@@ -1,0 +1,228 @@
+{
+  "id": "eval_fixture_010-stale-quote",
+  "customer_id": "cus_demo",
+  "merchant_id": "mer_demo_outfitter",
+  "basket": {
+    "basket_id": "bsk",
+    "basket_hash": "sha256:x",
+    "provider": "recorded",
+    "merchant_id": "mer_demo_outfitter",
+    "merchant_name": "Demo Outfitter (synthetic)",
+    "basket_ref": "plan-example",
+    "title": "Plan example basket",
+    "lines": [
+      {
+        "sku": "SKU",
+        "description": "Example item",
+        "quantity": 1,
+        "unit_price_minor": "10000"
+      }
+    ],
+    "synthetic": true
+  },
+  "mode": "assisted",
+  "status": "current",
+  "disclosure": "recommendation_only",
+  "refreshed_from": null,
+  "preference_policy_id": "pref_x",
+  "input_sha256": "054128e0ce91a48b7248718e0418a6570c4b2d16bfdaf485a1921ea7672290bd",
+  "versions": {
+    "contract": "1",
+    "engine": "0.1.0",
+    "formula": "net-cost-v1",
+    "rounding": "micro-usd-directed-v1",
+    "policy": "policy-2026-10-02.1",
+    "preference": "pref-v1"
+  },
+  "warnings": [],
+  "evaluated_at": "2026-10-02T12:00:00Z",
+  "expires_at": "2026-10-02T12:10:00Z",
+  "created_at": "2026-10-02T12:00:00Z",
+  "result": {
+    "contract_version": "1",
+    "engine_version": "0.1.0",
+    "formula_version": "net-cost-v1",
+    "rounding_version": "micro-usd-directed-v1",
+    "policy_version": "policy-2026-10-02.1",
+    "preference_version": "pref-v1",
+    "evaluated_at": "2026-10-02T12:00:00Z",
+    "basket_id": "bsk_plan_example",
+    "outcome": "insufficient_data",
+    "rationale": "options_missing_data",
+    "preferred_option_id": null,
+    "tied_option_ids": [],
+    "lowest_cost_option_ids": [
+      "card"
+    ],
+    "baseline_option_id": "card",
+    "savings_vs_baseline": null,
+    "expires_at": "2026-10-02T12:10:00Z",
+    "options": [
+      {
+        "option_id": "card",
+        "rail": "card",
+        "label": "Rewards credit card",
+        "payment_asset": {
+          "code": "USD",
+          "decimals": 2
+        },
+        "quote_id": "q_card_1",
+        "quote_valid_until": "2026-10-02T12:10:00Z",
+        "status": "eligible",
+        "exclusions": [],
+        "breakdown": {
+          "delivered_price_micro_usd": "100000000",
+          "fees": [],
+          "fees_total_micro_usd": "0",
+          "discounts": [],
+          "discounts_applied_total_micro_usd": "0",
+          "immediate_cost_micro_usd": "100000000",
+          "rewards": [
+            {
+              "rule_id": "card_cashback",
+              "rule_version": "2026-09",
+              "description": "3% cash back",
+              "points": null,
+              "micro_usd": "3000000",
+              "counted": true,
+              "cap_applied": false,
+              "not_counted_reason": null
+            }
+          ],
+          "estimated_rewards_total_micro_usd": "3000000",
+          "estimated_net_cost_micro_usd": "97000000",
+          "amount_due": {
+            "asset": {
+              "code": "USD",
+              "decimals": 2
+            },
+            "base_units": "10000"
+          }
+        },
+        "funding_step": null,
+        "notes": [],
+        "tradeoffs": {
+          "purchase_protection": "yes",
+          "uses_credit": true,
+          "refund_asset": "USD to the card",
+          "refund_timing": "5-10 business days",
+          "settlement": "Chargeback rights apply",
+          "notes": []
+        }
+      },
+      {
+        "option_id": "usdc",
+        "rail": "stablecoin",
+        "label": "USDC on Base",
+        "payment_asset": {
+          "code": "USDC",
+          "network": "base",
+          "decimals": 6
+        },
+        "quote_id": "q_usdc_1",
+        "quote_valid_until": "2026-10-02T12:00:00Z",
+        "status": "excluded",
+        "exclusions": [
+          {
+            "code": "stale_quote",
+            "kind": "missing_data",
+            "params": {
+              "quote_id": "q_usdc_1",
+              "valid_until": "2026-10-02T12:00:00Z"
+            }
+          }
+        ],
+        "breakdown": {
+          "delivered_price_micro_usd": "100000000",
+          "fees": [
+            {
+              "fee_id": "usdc_network",
+              "kind": "network",
+              "description": "Network and processing",
+              "source_amount": {
+                "asset": {
+                  "code": "USDC",
+                  "network": "base",
+                  "decimals": 6
+                },
+                "base_units": "1500000"
+              },
+              "micro_usd": "1500000"
+            }
+          ],
+          "fees_total_micro_usd": "1500000",
+          "discounts": [
+            {
+              "discount_id": "usdc_pay_discount",
+              "description": "Stablecoin payment discount",
+              "applied": true,
+              "micro_usd": "4000000",
+              "not_applied_reason": null
+            }
+          ],
+          "discounts_applied_total_micro_usd": "4000000",
+          "immediate_cost_micro_usd": "97500000",
+          "rewards": [],
+          "estimated_rewards_total_micro_usd": "0",
+          "estimated_net_cost_micro_usd": "97500000",
+          "amount_due": {
+            "asset": {
+              "code": "USDC",
+              "network": "base",
+              "decimals": 6
+            },
+            "base_units": "97500000"
+          }
+        },
+        "funding_step": null,
+        "notes": [],
+        "tradeoffs": {
+          "purchase_protection": "no",
+          "uses_credit": false,
+          "refund_asset": "USDC on Base",
+          "refund_timing": "Merchant-initiated; timing varies",
+          "settlement": "Final once confirmed",
+          "notes": []
+        }
+      }
+    ],
+    "assumptions": [
+      {
+        "code": "reward_base_excludes_fees",
+        "option_id": null,
+        "params": {}
+      },
+      {
+        "code": "usd_rate_used",
+        "option_id": "usdc",
+        "params": {
+          "asset": "USDC:base:6",
+          "quote_id": "q_usdc_1",
+          "usd_den": "1",
+          "usd_num": "1"
+        }
+      },
+      {
+        "code": "amount_due_is_upper_bound",
+        "option_id": "usdc",
+        "params": {}
+      }
+    ],
+    "sensitivities": [
+      {
+        "code": "quote_expiry",
+        "option_id": null,
+        "params": {
+          "expires_at": "2026-10-02T12:10:00Z"
+        }
+      },
+      {
+        "code": "excluded_option_could_change_result",
+        "option_id": "usdc",
+        "params": {
+          "exclusion_codes": "stale_quote"
+        }
+      }
+    ]
+  }
+}

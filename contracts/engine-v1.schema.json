@@ -1,0 +1,1441 @@
+{
+  "$defs": {
+    "Amount": {
+      "additionalProperties": false,
+      "description": "Integer base units of an explicit asset.",
+      "properties": {
+        "asset": {
+          "$ref": "#/$defs/AssetRef"
+        },
+        "base_units": {
+          "$ref": "#/$defs/Units"
+        }
+      },
+      "required": [
+        "asset",
+        "base_units"
+      ],
+      "type": "object"
+    },
+    "AssetRef": {
+      "additionalProperties": false,
+      "description": "An asset with explicit network and decimals. Fiat has no network.",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "decimals": {
+          "format": "uint8",
+          "maximum": 255,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "network": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "code",
+        "decimals"
+      ],
+      "type": "object"
+    },
+    "Availability": {
+      "additionalProperties": false,
+      "properties": {
+        "customer_consent": {
+          "type": "boolean"
+        },
+        "jurisdiction": {
+          "$ref": "#/$defs/Verification"
+        },
+        "merchant_acceptance": {
+          "$ref": "#/$defs/Verification"
+        },
+        "method_available": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "method_available",
+        "jurisdiction",
+        "merchant_acceptance",
+        "customer_consent"
+      ],
+      "type": "object"
+    },
+    "Basket": {
+      "additionalProperties": false,
+      "properties": {
+        "basket_hash": {
+          "description": "Identifies the exact basket contents; every quote must carry the same hash.",
+          "type": "string"
+        },
+        "basket_id": {
+          "type": "string"
+        },
+        "merchant_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "basket_id",
+        "merchant_id",
+        "basket_hash"
+      ],
+      "type": "object"
+    },
+    "Breakdown": {
+      "properties": {
+        "amount_due": {
+          "$ref": "#/$defs/Amount",
+          "description": "Upper bound on what is charged to the payment method, in its own asset."
+        },
+        "delivered_price_micro_usd": {
+          "$ref": "#/$defs/MicroUsd"
+        },
+        "discounts": {
+          "items": {
+            "$ref": "#/$defs/DiscountLine"
+          },
+          "type": "array"
+        },
+        "discounts_applied_total_micro_usd": {
+          "$ref": "#/$defs/MicroUsd"
+        },
+        "estimated_net_cost_micro_usd": {
+          "$ref": "#/$defs/MicroUsd",
+          "description": "Immediate cost minus estimated rewards."
+        },
+        "estimated_rewards_total_micro_usd": {
+          "$ref": "#/$defs/MicroUsd",
+          "description": "Conservatively valued future rewards. An estimate, not a realized saving."
+        },
+        "fees": {
+          "items": {
+            "$ref": "#/$defs/FeeLine"
+          },
+          "type": "array"
+        },
+        "fees_total_micro_usd": {
+          "$ref": "#/$defs/MicroUsd"
+        },
+        "immediate_cost_micro_usd": {
+          "$ref": "#/$defs/MicroUsd",
+          "description": "Delivered price plus fees minus applied discounts. No estimates."
+        },
+        "rewards": {
+          "items": {
+            "$ref": "#/$defs/RewardLine"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "delivered_price_micro_usd",
+        "fees",
+        "fees_total_micro_usd",
+        "discounts",
+        "discounts_applied_total_micro_usd",
+        "immediate_cost_micro_usd",
+        "rewards",
+        "estimated_rewards_total_micro_usd",
+        "estimated_net_cost_micro_usd",
+        "amount_due"
+      ],
+      "type": "object"
+    },
+    "Discount": {
+      "additionalProperties": false,
+      "properties": {
+        "amount": {
+          "$ref": "#/$defs/Amount"
+        },
+        "description": {
+          "default": "",
+          "type": "string"
+        },
+        "discount_id": {
+          "type": "string"
+        },
+        "eligibility": {
+          "$ref": "#/$defs/Verification"
+        },
+        "immediately_usable": {
+          "description": "False for benefits that cannot reduce this payment (e.g. credit on a future order).",
+          "type": "boolean"
+        },
+        "included_in_quote": {
+          "description": "True when the merchant quote's delivered price already reflects this discount.",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "discount_id",
+        "amount",
+        "included_in_quote",
+        "immediately_usable",
+        "eligibility"
+      ],
+      "type": "object"
+    },
+    "DiscountLine": {
+      "properties": {
+        "applied": {
+          "type": "boolean"
+        },
+        "description": {
+          "type": "string"
+        },
+        "discount_id": {
+          "type": "string"
+        },
+        "micro_usd": {
+          "$ref": "#/$defs/MicroUsd",
+          "description": "Amount subtracted from the cost; zero when not applied."
+        },
+        "not_applied_reason": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ExplanationCode"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "discount_id",
+        "description",
+        "applied",
+        "micro_usd"
+      ],
+      "type": "object"
+    },
+    "Earn": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "description": "Cash back as basis points of the reward base.",
+          "properties": {
+            "rate_bps": {
+              "$ref": "#/$defs/Units"
+            },
+            "type": {
+              "const": "cashback",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "rate_bps"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "description": "Points earned per USD of the reward base, in thousandths of a point.",
+          "properties": {
+            "milli_points_per_usd": {
+              "$ref": "#/$defs/Units"
+            },
+            "program_id": {
+              "type": "string"
+            },
+            "type": {
+              "const": "points",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "program_id",
+            "milli_points_per_usd"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "ErrorBody": {
+      "properties": {
+        "code": {
+          "description": "`unauthorized`, `malformed_request`, or a request error code.",
+          "type": "string"
+        },
+        "field": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "type": "object"
+    },
+    "ErrorEnvelope": {
+      "properties": {
+        "error": {
+          "$ref": "#/$defs/ErrorBody"
+        }
+      },
+      "required": [
+        "error"
+      ],
+      "type": "object"
+    },
+    "EvaluateEnvelope": {
+      "properties": {
+        "input_sha256": {
+          "description": "SHA-256 of the request body exactly as received.",
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/$defs/EvaluationResponse"
+        }
+      },
+      "required": [
+        "input_sha256",
+        "result"
+      ],
+      "type": "object"
+    },
+    "EvaluationRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "basket": {
+          "$ref": "#/$defs/Basket"
+        },
+        "contract_version": {
+          "description": "Must equal the engine's contract version (\"1\").",
+          "type": "string"
+        },
+        "evaluated_at": {
+          "$ref": "#/$defs/Timestamp",
+          "description": "Supplied by the caller so that an evaluation is reproducible."
+        },
+        "options": {
+          "items": {
+            "$ref": "#/$defs/PaymentOption"
+          },
+          "type": "array"
+        },
+        "policy": {
+          "$ref": "#/$defs/Policy"
+        },
+        "preferences": {
+          "$ref": "#/$defs/Preferences"
+        }
+      },
+      "required": [
+        "contract_version",
+        "evaluated_at",
+        "basket",
+        "policy",
+        "preferences",
+        "options"
+      ],
+      "type": "object"
+    },
+    "EvaluationResponse": {
+      "properties": {
+        "assumptions": {
+          "items": {
+            "$ref": "#/$defs/Explanation"
+          },
+          "type": "array"
+        },
+        "baseline_option_id": {
+          "description": "The customer's default, when it is eligible.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "basket_id": {
+          "type": "string"
+        },
+        "contract_version": {
+          "type": "string"
+        },
+        "engine_version": {
+          "type": "string"
+        },
+        "evaluated_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "expires_at": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Earliest expiry among the quotes the result depends on."
+        },
+        "formula_version": {
+          "type": "string"
+        },
+        "lowest_cost_option_ids": {
+          "description": "Eligible option(s) with the lowest estimated net cost, before the savings threshold.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "options": {
+          "items": {
+            "$ref": "#/$defs/OptionResult"
+          },
+          "type": "array"
+        },
+        "outcome": {
+          "$ref": "#/$defs/Outcome"
+        },
+        "policy_version": {
+          "type": "string"
+        },
+        "preference_version": {
+          "type": "string"
+        },
+        "preferred_option_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "rationale": {
+          "$ref": "#/$defs/Rationale"
+        },
+        "rounding_version": {
+          "type": "string"
+        },
+        "savings_vs_baseline": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Savings"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Lowest-cost option compared with the baseline, when they differ."
+        },
+        "sensitivities": {
+          "description": "What could change the result.",
+          "items": {
+            "$ref": "#/$defs/Explanation"
+          },
+          "type": "array"
+        },
+        "tied_option_ids": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "contract_version",
+        "engine_version",
+        "formula_version",
+        "rounding_version",
+        "policy_version",
+        "preference_version",
+        "evaluated_at",
+        "basket_id",
+        "outcome",
+        "rationale",
+        "tied_option_ids",
+        "lowest_cost_option_ids",
+        "options",
+        "assumptions",
+        "sensitivities"
+      ],
+      "type": "object"
+    },
+    "Exclusion": {
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/ExclusionCode"
+        },
+        "kind": {
+          "$ref": "#/$defs/ExclusionKind"
+        },
+        "params": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        }
+      },
+      "required": [
+        "code",
+        "kind",
+        "params"
+      ],
+      "type": "object"
+    },
+    "ExclusionCode": {
+      "enum": [
+        "method_unavailable",
+        "unsupported_jurisdiction",
+        "jurisdiction_unverified",
+        "merchant_does_not_accept",
+        "merchant_acceptance_unverified",
+        "not_consented",
+        "rail_not_allowed",
+        "purchase_protection_required",
+        "credit_not_allowed",
+        "stale_quote",
+        "basket_mismatch",
+        "incompatible_asset",
+        "rate_unavailable",
+        "funding_source_not_permitted",
+        "funding_not_consented",
+        "unknown_required_fee",
+        "amount_out_of_range",
+        "funds_unverified",
+        "insufficient_funds"
+      ],
+      "type": "string"
+    },
+    "ExclusionKind": {
+      "description": "`missing_data` exclusions could be resolved by better or fresher data, so\nthe evaluation reports insufficient data instead of a recommendation.",
+      "enum": [
+        "definite",
+        "missing_data"
+      ],
+      "type": "string"
+    },
+    "Explanation": {
+      "description": "Machine-readable explanation component. The interface renders these; it\nnever recomputes them.",
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/ExplanationCode"
+        },
+        "option_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "params": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        }
+      },
+      "required": [
+        "code",
+        "params"
+      ],
+      "type": "object"
+    },
+    "ExplanationCode": {
+      "enum": [
+        "discount_already_in_quote",
+        "discount_not_immediately_usable",
+        "discount_unverified",
+        "discount_unvaluable",
+        "duplicate_discount_ignored",
+        "discount_capped_at_price",
+        "reward_unverified",
+        "reward_cap_applied",
+        "reward_cap_exhausted",
+        "point_valuation_missing",
+        "point_valuation_unstable",
+        "usd_rate_used",
+        "point_valuation_used",
+        "reward_base_excludes_fees",
+        "amount_due_is_upper_bound",
+        "quote_expiry",
+        "margin",
+        "depends_on_estimated_rewards",
+        "unstable_point_valuation_excluded",
+        "savings_below_threshold",
+        "excluded_option_could_change_result"
+      ],
+      "type": "string"
+    },
+    "Fee": {
+      "additionalProperties": false,
+      "properties": {
+        "amount": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Amount"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Required when `status` is `known`; must be absent otherwise."
+        },
+        "description": {
+          "default": "",
+          "type": "string"
+        },
+        "fee_id": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/FeeKind"
+        },
+        "status": {
+          "$ref": "#/$defs/FeeStatus"
+        }
+      },
+      "required": [
+        "fee_id",
+        "kind",
+        "status"
+      ],
+      "type": "object"
+    },
+    "FeeKind": {
+      "enum": [
+        "payment_surcharge",
+        "fx",
+        "funding",
+        "conversion",
+        "network",
+        "other"
+      ],
+      "type": "string"
+    },
+    "FeeLine": {
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "fee_id": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/FeeKind"
+        },
+        "micro_usd": {
+          "$ref": "#/$defs/MicroUsd"
+        },
+        "source_amount": {
+          "$ref": "#/$defs/Amount"
+        }
+      },
+      "required": [
+        "fee_id",
+        "kind",
+        "description",
+        "source_amount",
+        "micro_usd"
+      ],
+      "type": "object"
+    },
+    "FeeStatus": {
+      "enum": [
+        "known",
+        "unknown",
+        "not_applicable"
+      ],
+      "type": "string"
+    },
+    "FundingSource": {
+      "enum": [
+        "bank_transfer",
+        "debit_card",
+        "credit_card",
+        "fiat_balance"
+      ],
+      "type": "string"
+    },
+    "FundingStep": {
+      "additionalProperties": false,
+      "description": "Optional funding or conversion, shown to the customer as a separate quoted step.",
+      "properties": {
+        "amount": {
+          "$ref": "#/$defs/Amount",
+          "description": "Amount added to the spendable balance, in the payment asset."
+        },
+        "customer_consent": {
+          "type": "boolean"
+        },
+        "quote_id": {
+          "type": "string"
+        },
+        "source": {
+          "$ref": "#/$defs/FundingSource"
+        },
+        "valid_until": {
+          "$ref": "#/$defs/Timestamp"
+        }
+      },
+      "required": [
+        "source",
+        "amount",
+        "quote_id",
+        "valid_until",
+        "customer_consent"
+      ],
+      "type": "object"
+    },
+    "FundingStepResult": {
+      "properties": {
+        "amount": {
+          "$ref": "#/$defs/Amount"
+        },
+        "fees_micro_usd": {
+          "$ref": "#/$defs/MicroUsd",
+          "description": "Funding and conversion fees for this step; included in the fee total."
+        },
+        "quote_id": {
+          "type": "string"
+        },
+        "source": {
+          "$ref": "#/$defs/FundingSource"
+        },
+        "valid_until": {
+          "$ref": "#/$defs/Timestamp"
+        }
+      },
+      "required": [
+        "source",
+        "amount",
+        "quote_id",
+        "valid_until",
+        "fees_micro_usd"
+      ],
+      "type": "object"
+    },
+    "Funds": {
+      "additionalProperties": false,
+      "properties": {
+        "available": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Amount"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Spendable balance or available credit in the payment asset. Required when known."
+        },
+        "reserve": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Amount"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Liquidity the customer wants left untouched, in the payment asset."
+        },
+        "status": {
+          "$ref": "#/$defs/FundsStatus"
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "type": "object"
+    },
+    "FundsStatus": {
+      "enum": [
+        "known",
+        "unknown"
+      ],
+      "type": "string"
+    },
+    "HardConstraints": {
+      "additionalProperties": false,
+      "properties": {
+        "allowed_rails": {
+          "default": null,
+          "description": "When present, only these rails may be recommended.",
+          "items": {
+            "$ref": "#/$defs/Rail"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "avoid_credit": {
+          "default": false,
+          "type": "boolean"
+        },
+        "require_purchase_protection": {
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "MicroUsd": {
+      "description": "Signed micro-USD (1 USD = 1000000) as a decimal string. Never a JSON number.",
+      "pattern": "^(0|-?[1-9][0-9]{0,38})$",
+      "type": "string"
+    },
+    "OptionResult": {
+      "properties": {
+        "breakdown": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Breakdown"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Present whenever the amounts could be computed, including for excluded\noptions (shown for information only)."
+        },
+        "exclusions": {
+          "items": {
+            "$ref": "#/$defs/Exclusion"
+          },
+          "type": "array"
+        },
+        "funding_step": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/FundingStepResult"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "label": {
+          "type": "string"
+        },
+        "notes": {
+          "items": {
+            "$ref": "#/$defs/Explanation"
+          },
+          "type": "array"
+        },
+        "option_id": {
+          "type": "string"
+        },
+        "payment_asset": {
+          "$ref": "#/$defs/AssetRef"
+        },
+        "quote_id": {
+          "type": "string"
+        },
+        "quote_valid_until": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "rail": {
+          "$ref": "#/$defs/Rail"
+        },
+        "status": {
+          "$ref": "#/$defs/OptionStatus"
+        },
+        "tradeoffs": {
+          "$ref": "#/$defs/Tradeoffs"
+        }
+      },
+      "required": [
+        "option_id",
+        "rail",
+        "label",
+        "payment_asset",
+        "quote_id",
+        "quote_valid_until",
+        "status",
+        "exclusions",
+        "notes",
+        "tradeoffs"
+      ],
+      "type": "object"
+    },
+    "OptionStatus": {
+      "enum": [
+        "eligible",
+        "excluded"
+      ],
+      "type": "string"
+    },
+    "Outcome": {
+      "enum": [
+        "preferred",
+        "tie",
+        "insufficient_data",
+        "no_eligible_option"
+      ],
+      "type": "string"
+    },
+    "PaymentOption": {
+      "additionalProperties": false,
+      "properties": {
+        "availability": {
+          "$ref": "#/$defs/Availability"
+        },
+        "discounts": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Discount"
+          },
+          "type": "array"
+        },
+        "fees": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Fee"
+          },
+          "type": "array"
+        },
+        "funding_step": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/FundingStep"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "funds": {
+          "$ref": "#/$defs/Funds"
+        },
+        "label": {
+          "type": "string"
+        },
+        "option_id": {
+          "type": "string"
+        },
+        "payment_asset": {
+          "$ref": "#/$defs/AssetRef",
+          "description": "The asset the customer would pay with."
+        },
+        "quote": {
+          "$ref": "#/$defs/RailQuote"
+        },
+        "rail": {
+          "$ref": "#/$defs/Rail"
+        },
+        "rewards": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/RewardRule"
+          },
+          "type": "array"
+        },
+        "tradeoffs": {
+          "$ref": "#/$defs/Tradeoffs"
+        }
+      },
+      "required": [
+        "option_id",
+        "rail",
+        "label",
+        "payment_asset",
+        "quote",
+        "availability",
+        "funds",
+        "tradeoffs"
+      ],
+      "type": "object"
+    },
+    "PointValuation": {
+      "additionalProperties": false,
+      "properties": {
+        "micro_usd_per_point": {
+          "$ref": "#/$defs/Units",
+          "description": "Customer's conservative value of one point, in micro-USD."
+        },
+        "program_id": {
+          "type": "string"
+        },
+        "stability": {
+          "$ref": "#/$defs/Stability"
+        },
+        "valuation_version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "program_id",
+        "valuation_version",
+        "micro_usd_per_point",
+        "stability"
+      ],
+      "type": "object"
+    },
+    "Policy": {
+      "additionalProperties": false,
+      "description": "Platform policy for an evaluation. Versioned and recorded with every result.",
+      "properties": {
+        "comparison_currency": {
+          "description": "Must be \"USD\" in contract v1.",
+          "type": "string"
+        },
+        "permitted_funding_sources": {
+          "description": "Funding sources that may be shown as a separate quoted step.",
+          "items": {
+            "$ref": "#/$defs/FundingSource"
+          },
+          "type": "array"
+        },
+        "policy_version": {
+          "type": "string"
+        },
+        "required_fee_kinds": {
+          "$ref": "#/$defs/RequiredFeeKinds",
+          "description": "Fee kinds that must be known or explicitly not applicable, per rail."
+        },
+        "supported_stablecoins": {
+          "description": "Stablecoin assets (code, network, decimals) that may be compared.",
+          "items": {
+            "$ref": "#/$defs/AssetRef"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "policy_version",
+        "comparison_currency",
+        "supported_stablecoins",
+        "required_fee_kinds",
+        "permitted_funding_sources"
+      ],
+      "type": "object"
+    },
+    "Preferences": {
+      "additionalProperties": false,
+      "description": "Customer preferences. Versioned and recorded with every result.",
+      "properties": {
+        "default_option_id": {
+          "default": null,
+          "description": "The customer's stated default method; the baseline for savings.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "hard_constraints": {
+          "$ref": "#/$defs/HardConstraints"
+        },
+        "min_savings_threshold": {
+          "$ref": "#/$defs/Amount",
+          "description": "Minimum estimated saving (USD) before recommending a switch away from the default."
+        },
+        "point_valuations": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/PointValuation"
+          },
+          "type": "array"
+        },
+        "preference_version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "preference_version",
+        "min_savings_threshold",
+        "hard_constraints"
+      ],
+      "type": "object"
+    },
+    "Rail": {
+      "enum": [
+        "card",
+        "stablecoin"
+      ],
+      "type": "string"
+    },
+    "RailQuote": {
+      "additionalProperties": false,
+      "properties": {
+        "accepted_asset": {
+          "$ref": "#/$defs/AssetRef",
+          "description": "The asset the merchant accepts on this rail."
+        },
+        "basket_hash": {
+          "type": "string"
+        },
+        "delivered_price": {
+          "$ref": "#/$defs/Amount",
+          "description": "Delivered price (items, shipping, tax) for this rail before payment-specific adjustments."
+        },
+        "obtained_at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "quote_id": {
+          "type": "string"
+        },
+        "usd_rate": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Rate"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Required to value a non-USD payment asset."
+        },
+        "valid_until": {
+          "$ref": "#/$defs/Timestamp"
+        }
+      },
+      "required": [
+        "quote_id",
+        "provider",
+        "basket_hash",
+        "delivered_price",
+        "accepted_asset",
+        "obtained_at",
+        "valid_until"
+      ],
+      "type": "object"
+    },
+    "Rate": {
+      "additionalProperties": false,
+      "description": "USD value of one whole unit of an asset, as the exact ratio `usd_num / usd_den`.",
+      "properties": {
+        "usd_den": {
+          "$ref": "#/$defs/Units"
+        },
+        "usd_num": {
+          "$ref": "#/$defs/Units"
+        }
+      },
+      "required": [
+        "usd_num",
+        "usd_den"
+      ],
+      "type": "object"
+    },
+    "Rationale": {
+      "enum": [
+        "default_is_lowest_cost",
+        "savings_meet_threshold",
+        "savings_below_threshold",
+        "lowest_cost_no_default",
+        "only_eligible_option",
+        "equal_net_cost",
+        "options_missing_data",
+        "no_eligible_option"
+      ],
+      "type": "string"
+    },
+    "RequiredFeeKinds": {
+      "additionalProperties": false,
+      "properties": {
+        "card": {
+          "items": {
+            "$ref": "#/$defs/FeeKind"
+          },
+          "type": "array"
+        },
+        "stablecoin": {
+          "items": {
+            "$ref": "#/$defs/FeeKind"
+          },
+          "type": "array"
+        },
+        "with_funding_step": {
+          "description": "Additionally required whenever an option includes a funding step.",
+          "items": {
+            "$ref": "#/$defs/FeeKind"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "card",
+        "stablecoin",
+        "with_funding_step"
+      ],
+      "type": "object"
+    },
+    "RewardCap": {
+      "additionalProperties": false,
+      "description": "Period cap. Units are USD minor units for cashback and whole points for points.",
+      "properties": {
+        "consumed": {
+          "$ref": "#/$defs/Units"
+        },
+        "limit": {
+          "$ref": "#/$defs/Units"
+        }
+      },
+      "required": [
+        "limit",
+        "consumed"
+      ],
+      "type": "object"
+    },
+    "RewardLine": {
+      "properties": {
+        "cap_applied": {
+          "type": "boolean"
+        },
+        "counted": {
+          "type": "boolean"
+        },
+        "description": {
+          "type": "string"
+        },
+        "micro_usd": {
+          "$ref": "#/$defs/MicroUsd",
+          "description": "Value counted in the estimated net cost; zero when not counted."
+        },
+        "not_counted_reason": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ExplanationCode"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "points": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Units"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Points earned after caps; absent for cashback."
+        },
+        "rule_id": {
+          "type": "string"
+        },
+        "rule_version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "rule_id",
+        "rule_version",
+        "description",
+        "micro_usd",
+        "counted",
+        "cap_applied"
+      ],
+      "type": "object"
+    },
+    "RewardRule": {
+      "additionalProperties": false,
+      "properties": {
+        "cap": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RewardCap"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "description": {
+          "default": "",
+          "type": "string"
+        },
+        "earn": {
+          "$ref": "#/$defs/Earn"
+        },
+        "eligibility": {
+          "$ref": "#/$defs/Verification"
+        },
+        "rule_id": {
+          "type": "string"
+        },
+        "rule_version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "rule_id",
+        "rule_version",
+        "eligibility",
+        "earn"
+      ],
+      "type": "object"
+    },
+    "Savings": {
+      "description": "Estimated saving of `option_id` relative to the customer's default. Immediate\namounts and estimated rewards are reported separately.",
+      "properties": {
+        "baseline_option_id": {
+          "type": "string"
+        },
+        "estimated_rewards_micro_usd": {
+          "$ref": "#/$defs/MicroUsd",
+          "description": "This option's estimated rewards minus the baseline's."
+        },
+        "estimated_total_micro_usd": {
+          "$ref": "#/$defs/MicroUsd",
+          "description": "Sum of the two; compared with the threshold."
+        },
+        "immediate_micro_usd": {
+          "$ref": "#/$defs/MicroUsd",
+          "description": "Baseline immediate cost minus this option's immediate cost."
+        },
+        "meets_threshold": {
+          "type": "boolean"
+        },
+        "option_id": {
+          "type": "string"
+        },
+        "threshold_micro_usd": {
+          "$ref": "#/$defs/MicroUsd"
+        }
+      },
+      "required": [
+        "baseline_option_id",
+        "option_id",
+        "immediate_micro_usd",
+        "estimated_rewards_micro_usd",
+        "estimated_total_micro_usd",
+        "threshold_micro_usd",
+        "meets_threshold"
+      ],
+      "type": "object"
+    },
+    "Stability": {
+      "enum": [
+        "stable",
+        "unstable"
+      ],
+      "type": "string"
+    },
+    "Timestamp": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "Tradeoffs": {
+      "additionalProperties": false,
+      "description": "Non-price considerations. Displayed as trade-offs; never converted to cash values.",
+      "properties": {
+        "notes": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "purchase_protection": {
+          "$ref": "#/$defs/Tri"
+        },
+        "refund_asset": {
+          "type": "string"
+        },
+        "refund_timing": {
+          "type": "string"
+        },
+        "settlement": {
+          "type": "string"
+        },
+        "uses_credit": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "purchase_protection",
+        "uses_credit",
+        "refund_asset",
+        "refund_timing",
+        "settlement"
+      ],
+      "type": "object"
+    },
+    "Tri": {
+      "enum": [
+        "yes",
+        "no",
+        "unknown"
+      ],
+      "type": "string"
+    },
+    "Units": {
+      "description": "Non-negative integer as a decimal string. Never a JSON number.",
+      "pattern": "^(0|[1-9][0-9]{0,38})$",
+      "type": "string"
+    },
+    "Verification": {
+      "description": "Result of an eligibility check performed upstream. `unverified` is never\ntreated as a pass.",
+      "enum": [
+        "verified",
+        "unverified",
+        "rejected"
+      ],
+      "type": "string"
+    },
+    "Versions": {
+      "properties": {
+        "contract_version": {
+          "type": "string"
+        },
+        "engine_version": {
+          "type": "string"
+        },
+        "formula_version": {
+          "type": "string"
+        },
+        "rounding_version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "contract_version",
+        "engine_version",
+        "formula_version",
+        "rounding_version"
+      ],
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Everything that crosses the engine boundary, for schema export.",
+  "properties": {
+    "error": {
+      "$ref": "#/$defs/ErrorEnvelope"
+    },
+    "request": {
+      "$ref": "#/$defs/EvaluationRequest"
+    },
+    "response": {
+      "$ref": "#/$defs/EvaluateEnvelope"
+    },
+    "versions": {
+      "$ref": "#/$defs/Versions"
+    }
+  },
+  "required": [
+    "request",
+    "response",
+    "error",
+    "versions"
+  ],
+  "title": "EngineContractV1",
+  "type": "object"
+}
