@@ -1,0 +1,16 @@
+bin/
+backend/bin/
+backend/.env
+*.log
+
+# Swift / Xcode
+ios/MyWalletKit/.build/
+ios/MyWalletKit/Package.resolved
+ios/MyWallet.xcodeproj/xcuserdata/
+ios/MyWallet.xcodeproj/project.xcworkspace/xcuserdata/
+ios/MyWallet.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/
+ios/build/
+DerivedData/
+*.xcuserstate
+
+.DS_Store
