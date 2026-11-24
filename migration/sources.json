@@ -27,6 +27,16 @@
       "commit": "6cf059a97dcb98779c0498dcc34c281d412426e6",
       "tree": "4178617c56c622923a9e506e19380cd32fce822b",
       "file_count": 164
+    },
+    {
+      "name": "MyWallet",
+      "path": "projects/MyWallet",
+      "url": "https://github.com/vaibhavkapur/MyWallet",
+      "default_branch": "main",
+      "commit": "68684c7255ab39ee5a29e1422015bae6d10e9728",
+      "tree": "1ca9f7686e9027c95118cd079c56d4f0fafb63a7",
+      "file_count": 69,
+      "import_commit": "dec4f46d25d84b37120af50efa7e219149dcaff4"
     }
   ]
 }
