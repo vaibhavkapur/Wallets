@@ -1,0 +1,7 @@
+[package]
+name = "rewards-reconciler"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded read-only batch settlement reconciliation utility for Merchant-funded Stablecoin Rewards"
+
+[dependencies]

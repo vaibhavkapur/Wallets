@@ -14,4 +14,5 @@ Choose a project below and follow its README. Run setup, tests, and demos from t
 - [Agent Checkout](projects/Agent-Checkout/) — Compare merchant prices and card rewards, approve an exact purchase, and recover from payment timeouts or issue a refund.
 - [Agent Spending Accounts](projects/Agent-Spending-Accounts/) — Fund a software agent, set spending limits, and track what it pays for API requests through an x402 gateway.
 - [Card-versus-Stablecoin Payment Optimizer](projects/Card-Stablecoin-Payment-Optimizer/) — Compare the estimated cost of paying by card or stablecoin for the same basket, then hand off the customer's approved choice.
+- [Merchant-Funded Stablecoin Rewards](projects/Merchant-Funded-Stablecoin-Rewards/) — Prefund versioned merchant cashback campaigns with a double-entry ledger, signed order/refund ingestion, and idempotent Base USDC payouts.
 - [MyWallet](projects/MyWallet/) — Save and manage cards in a SwiftUI iPhone app. A Go backend verifies enrollment before the app displays a masked card.

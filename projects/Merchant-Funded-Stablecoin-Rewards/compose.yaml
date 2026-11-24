@@ -1,0 +1,34 @@
+services:
+  db:
+    image: postgres:17.6-alpine
+    environment:
+      POSTGRES_DB: rewards
+      POSTGRES_USER: rewards
+      POSTGRES_PASSWORD: rewards_local
+    ports:
+      - "127.0.0.1:54329:5432"
+    volumes:
+      - rewards-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rewards -d rewards"]
+      interval: 3s
+      timeout: 3s
+      retries: 15
+  app:
+    build: .
+    ports:
+      - "127.0.0.1:8089:8089"
+    environment:
+      ADDR: 0.0.0.0:8089
+      APP_ORIGIN: http://127.0.0.1:8089
+      DATABASE_URL: postgres://rewards:rewards_local@db:5432/rewards?sslmode=disable
+      WEB_DIST: /app/web
+      OPERATOR_TOKEN: local-operator
+      WEBHOOK_SECRET: local-webhook-secret
+      SEED_PILOT_DATA: "true"
+      SANDBOX_UI_SIMULATOR: "true"
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  rewards-db:

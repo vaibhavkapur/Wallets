@@ -1,0 +1,47 @@
+name: Merchant-Funded Stablecoin Rewards
+
+on:
+  push:
+    paths:
+      - 'projects/Merchant-Funded-Stablecoin-Rewards/**'
+      - '.github/workflows/merchant-funded-stablecoin-rewards.yml'
+  pull_request:
+    paths:
+      - 'projects/Merchant-Funded-Stablecoin-Rewards/**'
+      - '.github/workflows/merchant-funded-stablecoin-rewards.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: projects/Merchant-Funded-Stablecoin-Rewards
+    services:
+      postgres:
+        image: postgres:17.6-alpine
+        env:
+          POSTGRES_USER: rewards
+          POSTGRES_PASSWORD: rewards_test
+          POSTGRES_DB: rewards
+        ports: ["5432:5432"]
+        options: --health-cmd "pg_isready -U rewards -d rewards" --health-interval 3s --health-timeout 3s --health-retries 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.27.1"
+          cache-dependency-path: projects/Merchant-Funded-Stablecoin-Rewards/backend/go.sum
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: projects/Merchant-Funded-Stablecoin-Rewards/.nvmrc
+          cache: npm
+          cache-dependency-path: projects/Merchant-Funded-Stablecoin-Rewards/web/package-lock.json
+      - run: rustup component add clippy
+      - run: make setup
+      - run: make test
+        env:
+          TEST_DATABASE_URL: postgres://rewards:rewards_test@127.0.0.1:5432/rewards?sslmode=disable
+      - run: make build check-contracts reconciler

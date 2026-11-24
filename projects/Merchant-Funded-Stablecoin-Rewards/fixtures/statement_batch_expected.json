@@ -1,0 +1,59 @@
+{
+  "batch_id": "batch_2026_10_15_daily",
+  "ledger_count": 4,
+  "provider_count": 4,
+  "matched_count": 1,
+  "discrepancy_count": 5,
+  "discrepancies": [
+    {
+      "kind": "amount_mismatch",
+      "reference_id": "pay_000102",
+      "asset": "USDC",
+      "network": "base",
+      "ledger_amount": "9750000",
+      "provider_amount": "9700000",
+      "delta_amount": "-50000",
+      "detail": "amount mismatch: ledger=9750000 provider=9700000"
+    },
+    {
+      "kind": "fee_mismatch",
+      "reference_id": "pay_000102",
+      "asset": "USDC",
+      "network": "base",
+      "ledger_amount": "250000",
+      "provider_amount": "300000",
+      "delta_amount": "50000",
+      "detail": "fee mismatch: ledger=250000 provider=300000"
+    },
+    {
+      "kind": "status_mismatch",
+      "reference_id": "pay_000103",
+      "asset": "USDC",
+      "network": "base",
+      "ledger_amount": "24750000",
+      "provider_amount": "24750000",
+      "delta_amount": "0",
+      "detail": "status mismatch: ledger=pending provider=settled"
+    },
+    {
+      "kind": "missing_in_provider",
+      "reference_id": "pay_000104",
+      "asset": "USDC",
+      "network": "base",
+      "ledger_amount": "5000000",
+      "provider_amount": "0",
+      "delta_amount": "-5000000",
+      "detail": "reference pay_000104 present in ledger (5000000) but missing in provider statement"
+    },
+    {
+      "kind": "missing_in_ledger",
+      "reference_id": "pay_000105",
+      "asset": "USDC",
+      "network": "base",
+      "ledger_amount": "0",
+      "provider_amount": "7500000",
+      "delta_amount": "7500000",
+      "detail": "reference pay_000105 present in provider statement (7500000) but missing in ledger"
+    }
+  ]
+}

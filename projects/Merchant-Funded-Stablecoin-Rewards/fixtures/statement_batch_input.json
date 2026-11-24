@@ -1,0 +1,79 @@
+{
+  "batch_id": "batch_2026_10_15_daily",
+  "ledger_records": [
+    {
+      "reference_id": "pay_000101",
+      "asset": "USDC",
+      "network": "base",
+      "decimals": 6,
+      "amount_base": "14750000",
+      "fee_base": "250000",
+      "status": "settled"
+    },
+    {
+      "reference_id": "pay_000102",
+      "asset": "USDC",
+      "network": "base",
+      "decimals": 6,
+      "amount_base": "9750000",
+      "fee_base": "250000",
+      "status": "settled"
+    },
+    {
+      "reference_id": "pay_000103",
+      "asset": "USDC",
+      "network": "base",
+      "decimals": 6,
+      "amount_base": "24750000",
+      "fee_base": "250000",
+      "status": "pending"
+    },
+    {
+      "reference_id": "pay_000104",
+      "asset": "USDC",
+      "network": "base",
+      "decimals": 6,
+      "amount_base": "5000000",
+      "fee_base": "250000",
+      "status": "settled"
+    }
+  ],
+  "provider_records": [
+    {
+      "reference_id": "pay_000101",
+      "asset": "USDC",
+      "network": "base",
+      "decimals": 6,
+      "amount_base": "14750000",
+      "fee_base": "250000",
+      "status": "settled"
+    },
+    {
+      "reference_id": "pay_000102",
+      "asset": "USDC",
+      "network": "base",
+      "decimals": 6,
+      "amount_base": "9700000",
+      "fee_base": "300000",
+      "status": "settled"
+    },
+    {
+      "reference_id": "pay_000103",
+      "asset": "USDC",
+      "network": "base",
+      "decimals": 6,
+      "amount_base": "24750000",
+      "fee_base": "250000",
+      "status": "settled"
+    },
+    {
+      "reference_id": "pay_000105",
+      "asset": "USDC",
+      "network": "base",
+      "decimals": 6,
+      "amount_base": "7500000",
+      "fee_base": "250000",
+      "status": "settled"
+    }
+  ]
+}

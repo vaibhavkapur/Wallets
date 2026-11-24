@@ -1,0 +1,196 @@
+{
+  "components": {
+    "schemas": {
+      "AmountString": {
+        "description": "Exact integer minor/base units encoded as a decimal string",
+        "pattern": "^-?[0-9]+$",
+        "type": "string"
+      }
+    }
+  },
+  "info": {
+    "description": "Double-entry ledger, versioned merchant cashback campaigns, signed order/refund ingestion, versioned beneficiaries, and idempotent stablecoin payouts.",
+    "title": "Merchant-funded Stablecoin Rewards API",
+    "version": "1.0.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/healthz": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "summary": "Health check"
+      }
+    },
+    "/v1/beneficiaries": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Beneficiary versions"
+          }
+        },
+        "summary": "List customer beneficiary versions"
+      },
+      "post": {
+        "responses": {
+          "201": {
+            "description": "BeneficiaryVersion created"
+          }
+        },
+        "summary": "Enroll or rotate an immutable verified beneficiary destination"
+      }
+    },
+    "/v1/campaigns": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Campaign list"
+          }
+        },
+        "summary": "List active versioned campaigns with funding coverage"
+      },
+      "post": {
+        "responses": {
+          "201": {
+            "description": "CampaignVersion created"
+          }
+        },
+        "summary": "Create a versioned campaign with caps and return rules"
+      }
+    },
+    "/v1/campaigns/{id}/funding": {
+      "post": {
+        "responses": {
+          "201": {
+            "description": "FundingEvent recorded"
+          }
+        },
+        "summary": "Record and reconcile merchant campaign prefunding"
+      }
+    },
+    "/v1/ledger/summary": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "LedgerSummary"
+          }
+        },
+        "summary": "Operator double-entry trial balance and funding coverage audit"
+      }
+    },
+    "/v1/merchant-events": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "Deduplicated"
+          },
+          "201": {
+            "description": "Event processed"
+          }
+        },
+        "summary": "Ingest HMAC-SHA256 authenticated order, fulfillment, refund, or chargeback events"
+      }
+    },
+    "/v1/payout-quotes": {
+      "post": {
+        "responses": {
+          "201": {
+            "description": "PayoutQuote created"
+          }
+        },
+        "summary": "Obtain exact payout amount, asset, network, destination, fees, and expiry"
+      }
+    },
+    "/v1/payouts": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Payout attempts"
+          }
+        },
+        "summary": "List payout attempts"
+      },
+      "post": {
+        "responses": {
+          "201": {
+            "description": "PayoutAttempt result"
+          }
+        },
+        "summary": "Authorize one idempotent payout bound to an approved quote and beneficiary version"
+      }
+    },
+    "/v1/payouts/{id}": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "PayoutDetail"
+          }
+        },
+        "summary": "Report provider and settlement status for a logical payout"
+      }
+    },
+    "/v1/payouts/{id}/retry": {
+      "post": {
+        "responses": {
+          "201": {
+            "description": "Retry PayoutAttempt"
+          }
+        },
+        "summary": "Safely retry a confirmed-failed logical payout after reconciliation"
+      }
+    },
+    "/v1/reconciliation-exceptions": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Reconciliation exceptions"
+          }
+        },
+        "summary": "Operator-only discrepancy queue"
+      }
+    },
+    "/v1/reconciliation-exceptions/{id}/resolve": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "Resolved exception"
+          }
+        },
+        "summary": "Resolve an operator reconciliation exception with audit note"
+      }
+    },
+    "/v1/rewards": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Customer rewards summary"
+          }
+        },
+        "summary": "List a customer's reward accruals, statements, and states"
+      }
+    },
+    "/v1/system/pause": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "PauseControl"
+          }
+        },
+        "summary": "Operator product-level pause control for reward issuance and payouts"
+      }
+    },
+    "/v1/webhooks/payout-provider": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "Callback processed"
+          }
+        },
+        "summary": "Ingest HMAC-SHA256 signed payout provider settlement callbacks"
+      }
+    }
+  }
+}
