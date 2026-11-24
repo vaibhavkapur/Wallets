@@ -1,0 +1,7 @@
+engine/target/
+orchestrator/bin/
+web/node_modules/
+web/**/node_modules/
+web/apps/compare/dist/
+.dev/
+.DS_Store

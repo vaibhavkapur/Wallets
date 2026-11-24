@@ -1,0 +1,8 @@
+*.log
+.DS_Store
+.dev/
+.env
+bin/
+dist/
+node_modules/
+target/

@@ -1,0 +1,242 @@
+{
+  "name": "902-amount-as-json-number",
+  "description": "Amounts must be decimal strings, never JSON numbers.",
+  "synthetic": true,
+  "request": {
+    "contract_version": "1",
+    "evaluated_at": "2026-10-02T12:00:00Z",
+    "basket": {
+      "basket_id": "bsk_plan_example",
+      "merchant_id": "mer_demo_outfitter",
+      "basket_hash": "sha256:2f1c0f6f6f3a4f0f8a9f1c7f2f0b1f7a3d5c9e1b4a6d8f0c2e4a6b8d0f1e3c5a"
+    },
+    "policy": {
+      "policy_version": "policy-2026-10-02.1",
+      "comparison_currency": "USD",
+      "supported_stablecoins": [
+        {
+          "code": "USDC",
+          "network": "base",
+          "decimals": 6
+        }
+      ],
+      "required_fee_kinds": {
+        "card": [
+          "payment_surcharge",
+          "fx"
+        ],
+        "stablecoin": [
+          "network"
+        ],
+        "with_funding_step": [
+          "funding",
+          "conversion"
+        ]
+      },
+      "permitted_funding_sources": [
+        "bank_transfer",
+        "debit_card",
+        "fiat_balance"
+      ]
+    },
+    "preferences": {
+      "preference_version": "pref-v1",
+      "default_option_id": "card",
+      "min_savings_threshold": {
+        "asset": {
+          "code": "USD",
+          "decimals": 2
+        },
+        "base_units": "0"
+      },
+      "hard_constraints": {
+        "allowed_rails": null,
+        "require_purchase_protection": false,
+        "avoid_credit": false
+      },
+      "point_valuations": []
+    },
+    "options": [
+      {
+        "option_id": "card",
+        "rail": "card",
+        "label": "Rewards credit card",
+        "payment_asset": {
+          "code": "USD",
+          "decimals": 2
+        },
+        "quote": {
+          "quote_id": "q_card_1",
+          "provider": "recorded",
+          "basket_hash": "sha256:2f1c0f6f6f3a4f0f8a9f1c7f2f0b1f7a3d5c9e1b4a6d8f0c2e4a6b8d0f1e3c5a",
+          "delivered_price": {
+            "asset": {
+              "code": "USD",
+              "decimals": 2
+            },
+            "base_units": 10000
+          },
+          "accepted_asset": {
+            "code": "USD",
+            "decimals": 2
+          },
+          "usd_rate": null,
+          "obtained_at": "2026-10-02T11:59:00Z",
+          "valid_until": "2026-10-02T12:10:00Z"
+        },
+        "availability": {
+          "method_available": true,
+          "jurisdiction": "verified",
+          "merchant_acceptance": "verified",
+          "customer_consent": true
+        },
+        "fees": [
+          {
+            "fee_id": "card_surcharge",
+            "kind": "payment_surcharge",
+            "status": "not_applicable",
+            "amount": null,
+            "description": "No card surcharge"
+          },
+          {
+            "fee_id": "card_fx",
+            "kind": "fx",
+            "status": "not_applicable",
+            "amount": null,
+            "description": "Charged in USD"
+          }
+        ],
+        "discounts": [],
+        "rewards": [
+          {
+            "rule_id": "card_cashback",
+            "rule_version": "2026-09",
+            "eligibility": "verified",
+            "earn": {
+              "type": "cashback",
+              "rate_bps": "300"
+            },
+            "cap": null,
+            "description": "3% cash back"
+          }
+        ],
+        "funds": {
+          "status": "known",
+          "available": {
+            "asset": {
+              "code": "USD",
+              "decimals": 2
+            },
+            "base_units": "500000"
+          },
+          "reserve": null
+        },
+        "funding_step": null,
+        "tradeoffs": {
+          "purchase_protection": "yes",
+          "uses_credit": true,
+          "refund_asset": "USD to the card",
+          "refund_timing": "5-10 business days",
+          "settlement": "Chargeback rights apply",
+          "notes": []
+        }
+      },
+      {
+        "option_id": "usdc",
+        "rail": "stablecoin",
+        "label": "USDC on Base",
+        "payment_asset": {
+          "code": "USDC",
+          "network": "base",
+          "decimals": 6
+        },
+        "quote": {
+          "quote_id": "q_usdc_1",
+          "provider": "recorded",
+          "basket_hash": "sha256:2f1c0f6f6f3a4f0f8a9f1c7f2f0b1f7a3d5c9e1b4a6d8f0c2e4a6b8d0f1e3c5a",
+          "delivered_price": {
+            "asset": {
+              "code": "USD",
+              "decimals": 2
+            },
+            "base_units": "10000"
+          },
+          "accepted_asset": {
+            "code": "USDC",
+            "network": "base",
+            "decimals": 6
+          },
+          "usd_rate": {
+            "usd_num": "1",
+            "usd_den": "1"
+          },
+          "obtained_at": "2026-10-02T11:59:30Z",
+          "valid_until": "2026-10-02T12:05:00Z"
+        },
+        "availability": {
+          "method_available": true,
+          "jurisdiction": "verified",
+          "merchant_acceptance": "verified",
+          "customer_consent": true
+        },
+        "fees": [
+          {
+            "fee_id": "usdc_network",
+            "kind": "network",
+            "status": "known",
+            "amount": {
+              "asset": {
+                "code": "USDC",
+                "network": "base",
+                "decimals": 6
+              },
+              "base_units": "1500000"
+            },
+            "description": "Network and processing"
+          }
+        ],
+        "discounts": [
+          {
+            "discount_id": "usdc_pay_discount",
+            "amount": {
+              "asset": {
+                "code": "USD",
+                "decimals": 2
+              },
+              "base_units": "400"
+            },
+            "included_in_quote": false,
+            "immediately_usable": true,
+            "eligibility": "verified",
+            "description": "Stablecoin payment discount"
+          }
+        ],
+        "rewards": [],
+        "funds": {
+          "status": "known",
+          "available": {
+            "asset": {
+              "code": "USDC",
+              "network": "base",
+              "decimals": 6
+            },
+            "base_units": "250000000"
+          },
+          "reserve": null
+        },
+        "funding_step": null,
+        "tradeoffs": {
+          "purchase_protection": "no",
+          "uses_credit": false,
+          "refund_asset": "USDC on Base",
+          "refund_timing": "Merchant-initiated; timing varies",
+          "settlement": "Final once confirmed",
+          "notes": []
+        }
+      }
+    ]
+  },
+  "expected_error": {
+    "code": "malformed_request"
+  }
+}

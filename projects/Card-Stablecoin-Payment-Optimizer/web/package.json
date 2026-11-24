@@ -1,0 +1,15 @@
+{
+  "name": "card-stablecoin-optimizer-web",
+  "private": true,
+  "workspaces": ["packages/sdk", "apps/compare"],
+  "scripts": {
+    "generate": "npm run generate -w @unowallet/optimizer-sdk",
+    "typecheck": "npm run typecheck --workspaces",
+    "test": "npm test --workspaces",
+    "build": "npm run build --workspaces",
+    "dev": "npm run dev -w compare"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.0"
+  }
+}

@@ -1,0 +1,290 @@
+{
+  "name": "r006-coffee-box",
+  "description": "The card's 5% category bonus is nearly used up for the quarter: only $0.50 remains, so stablecoin saves $1.45.",
+  "synthetic": true,
+  "catalog": {
+    "merchant_id": "mer_demo_pantry",
+    "merchant_name": "Demo Pantry (synthetic)",
+    "basket_ref": "coffee-box",
+    "title": "Coffee subscription box",
+    "lines": [
+      {
+        "sku": "COF-BOX-M",
+        "description": "Coffee box, monthly",
+        "quantity": 1,
+        "unit_price_minor": "3600"
+      }
+    ],
+    "synthetic": true
+  },
+  "request": {
+    "contract_version": "1",
+    "evaluated_at": "2026-10-02T15:00:00Z",
+    "basket": {
+      "basket_id": "bsk_rec_coffee-box",
+      "merchant_id": "mer_demo_pantry",
+      "basket_hash": "sha256:81fcda8fe6d1cc9a348d26584c145f1d0e3913edcdf3fd2deafec0a131043917"
+    },
+    "policy": {
+      "policy_version": "policy-2026-10-02.1",
+      "comparison_currency": "USD",
+      "supported_stablecoins": [
+        {
+          "code": "USDC",
+          "network": "base",
+          "decimals": 6
+        }
+      ],
+      "required_fee_kinds": {
+        "card": [
+          "payment_surcharge",
+          "fx"
+        ],
+        "stablecoin": [
+          "network"
+        ],
+        "with_funding_step": [
+          "funding",
+          "conversion"
+        ]
+      },
+      "permitted_funding_sources": [
+        "bank_transfer",
+        "debit_card",
+        "fiat_balance"
+      ]
+    },
+    "preferences": {
+      "preference_version": "pref-v1",
+      "default_option_id": "card",
+      "min_savings_threshold": {
+        "asset": {
+          "code": "USD",
+          "decimals": 2
+        },
+        "base_units": "100"
+      },
+      "hard_constraints": {
+        "allowed_rails": null,
+        "require_purchase_protection": false,
+        "avoid_credit": false
+      },
+      "point_valuations": []
+    },
+    "options": [
+      {
+        "option_id": "card",
+        "rail": "card",
+        "label": "Rewards credit card",
+        "payment_asset": {
+          "code": "USD",
+          "decimals": 2
+        },
+        "quote": {
+          "quote_id": "q_rec_coffee-box_card",
+          "provider": "recorded",
+          "basket_hash": "sha256:81fcda8fe6d1cc9a348d26584c145f1d0e3913edcdf3fd2deafec0a131043917",
+          "delivered_price": {
+            "asset": {
+              "code": "USD",
+              "decimals": 2
+            },
+            "base_units": "3600"
+          },
+          "accepted_asset": {
+            "code": "USD",
+            "decimals": 2
+          },
+          "usd_rate": null,
+          "obtained_at": "2026-10-02T14:59:40Z",
+          "valid_until": "2026-10-02T15:10:00Z"
+        },
+        "availability": {
+          "method_available": true,
+          "jurisdiction": "verified",
+          "merchant_acceptance": "verified",
+          "customer_consent": true
+        },
+        "fees": [
+          {
+            "fee_id": "card_surcharge",
+            "kind": "payment_surcharge",
+            "status": "not_applicable",
+            "amount": null,
+            "description": "No card surcharge"
+          },
+          {
+            "fee_id": "card_fx",
+            "kind": "fx",
+            "status": "not_applicable",
+            "amount": null,
+            "description": "Charged in USD"
+          }
+        ],
+        "discounts": [],
+        "rewards": [
+          {
+            "rule_id": "card_cashback_rotating_q4",
+            "rule_version": "2026-09",
+            "eligibility": "verified",
+            "earn": {
+              "type": "cashback",
+              "rate_bps": "500"
+            },
+            "cap": {
+              "limit": "7500",
+              "consumed": "7450"
+            },
+            "description": "5% rotating category, capped"
+          }
+        ],
+        "funds": {
+          "status": "known",
+          "available": {
+            "asset": {
+              "code": "USD",
+              "decimals": 2
+            },
+            "base_units": "500000"
+          },
+          "reserve": null
+        },
+        "funding_step": null,
+        "tradeoffs": {
+          "purchase_protection": "yes",
+          "uses_credit": true,
+          "refund_asset": "USD to the card",
+          "refund_timing": "5-10 business days",
+          "settlement": "Chargeback rights apply",
+          "notes": []
+        }
+      },
+      {
+        "option_id": "usdc",
+        "rail": "stablecoin",
+        "label": "USDC on Base",
+        "payment_asset": {
+          "code": "USDC",
+          "network": "base",
+          "decimals": 6
+        },
+        "quote": {
+          "quote_id": "q_rec_coffee-box_usdc",
+          "provider": "recorded",
+          "basket_hash": "sha256:81fcda8fe6d1cc9a348d26584c145f1d0e3913edcdf3fd2deafec0a131043917",
+          "delivered_price": {
+            "asset": {
+              "code": "USD",
+              "decimals": 2
+            },
+            "base_units": "3600"
+          },
+          "accepted_asset": {
+            "code": "USDC",
+            "network": "base",
+            "decimals": 6
+          },
+          "usd_rate": {
+            "usd_num": "1",
+            "usd_den": "1"
+          },
+          "obtained_at": "2026-10-02T14:59:40Z",
+          "valid_until": "2026-10-02T15:05:00Z"
+        },
+        "availability": {
+          "method_available": true,
+          "jurisdiction": "verified",
+          "merchant_acceptance": "verified",
+          "customer_consent": true
+        },
+        "fees": [
+          {
+            "fee_id": "usdc_network",
+            "kind": "network",
+            "status": "known",
+            "amount": {
+              "asset": {
+                "code": "USDC",
+                "network": "base",
+                "decimals": 6
+              },
+              "base_units": "50000"
+            },
+            "description": "Network and processing"
+          }
+        ],
+        "discounts": [
+          {
+            "discount_id": "usdc_pay_discount",
+            "amount": {
+              "asset": {
+                "code": "USD",
+                "decimals": 2
+              },
+              "base_units": "200"
+            },
+            "included_in_quote": false,
+            "immediately_usable": true,
+            "eligibility": "verified",
+            "description": "$2 off for paying with USDC"
+          }
+        ],
+        "rewards": [],
+        "funds": {
+          "status": "known",
+          "available": {
+            "asset": {
+              "code": "USDC",
+              "network": "base",
+              "decimals": 6
+            },
+            "base_units": "250000000"
+          },
+          "reserve": null
+        },
+        "funding_step": null,
+        "tradeoffs": {
+          "purchase_protection": "no",
+          "uses_credit": false,
+          "refund_asset": "USDC on Base",
+          "refund_timing": "Merchant-initiated; timing varies",
+          "settlement": "Final once confirmed",
+          "notes": []
+        }
+      }
+    ]
+  },
+  "expected": {
+    "outcome": "preferred",
+    "rationale": "savings_meet_threshold",
+    "preferred_option_id": "usdc",
+    "tied_option_ids": [],
+    "lowest_cost_option_ids": [
+      "usdc"
+    ],
+    "savings_estimated_total_micro_usd": "1450000",
+    "expires_at": "2026-10-02T15:05:00Z",
+    "sensitivity_codes": [
+      "margin",
+      "quote_expiry"
+    ],
+    "options": {
+      "card": {
+        "status": "eligible",
+        "exclusion_codes": [],
+        "immediate_cost_micro_usd": "36000000",
+        "estimated_rewards_micro_usd": "500000",
+        "estimated_net_cost_micro_usd": "35500000",
+        "amount_due_base_units": "3600"
+      },
+      "usdc": {
+        "status": "eligible",
+        "exclusion_codes": [],
+        "immediate_cost_micro_usd": "34050000",
+        "estimated_rewards_micro_usd": "0",
+        "estimated_net_cost_micro_usd": "34050000",
+        "amount_due_base_units": "34050000"
+      }
+    }
+  }
+}

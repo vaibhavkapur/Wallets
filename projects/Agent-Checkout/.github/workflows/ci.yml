@@ -1,0 +1,41 @@
+name: Agent Checkout
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17.6-alpine
+        env:
+          POSTGRES_USER: uno
+          POSTGRES_PASSWORD: uno_test
+          POSTGRES_DB: uno
+        ports: ["5432:5432"]
+        options: --health-cmd "pg_isready -U uno -d uno" --health-interval 3s --health-timeout 3s --health-retries 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.27.1"
+          cache-dependency-path: backend/go.sum
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: make setup
+      - run: make test
+        env:
+          TEST_DATABASE_URL: postgres://uno:uno_test@127.0.0.1:5432/uno?sslmode=disable
+      - run: make build check-contracts
+      - run: npx playwright install --with-deps chromium
+        working-directory: web
+      - run: npm run test:e2e
+        working-directory: web

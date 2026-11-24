@@ -1,0 +1,11 @@
+{
+  "policy_version": "policy-2026-10-02.1",
+  "comparison_currency": "USD",
+  "supported_stablecoins": [{ "code": "USDC", "network": "base", "decimals": 6 }],
+  "required_fee_kinds": {
+    "card": ["payment_surcharge", "fx"],
+    "stablecoin": ["network"],
+    "with_funding_step": ["funding", "conversion"]
+  },
+  "permitted_funding_sources": ["bank_transfer", "debit_card", "fiat_balance"]
+}
