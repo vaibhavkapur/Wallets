@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Filled from build settings; see docs/getting-started.md. -->
+	<key>MyWalletMode</key>
+	<string>$(MYWALLET_MODE)</string>
+	<key>MyWalletAPIBaseURL</key>
+	<string>$(MYWALLET_API_BASE_URL)</string>
+
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<!-- Return URL after an external authentication challenge. -->
+				<string>mywallet</string>
+			</array>
+		</dict>
+	</array>
+
+	<key>NSFaceIDUsageDescription</key>
+	<string>MyWallet uses Face ID to lock access to your saved cards.</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>UILaunchScreen</key>
+	<dict/>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+</dict>
+</plist>
