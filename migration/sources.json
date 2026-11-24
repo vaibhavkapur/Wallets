@@ -1,0 +1,32 @@
+{
+  "import_commit": "93a0a474eb58d59193a9e46e2fe0ff39715a8e87",
+  "repositories": [
+    {
+      "name": "Agent-Checkout",
+      "path": "projects/Agent-Checkout",
+      "url": "https://github.com/vaibhavkapur/Agent-Checkout",
+      "default_branch": "main",
+      "commit": "8c311063dcd25fc334636a5eeb9ba33a99abff22",
+      "tree": "43d41a02cf9f41f64505323675e445caea715632",
+      "file_count": 54
+    },
+    {
+      "name": "Agent-Spending-Accounts",
+      "path": "projects/Agent-Spending-Accounts",
+      "url": "https://github.com/vaibhavkapur/Agent-Spending-Accounts",
+      "default_branch": "main",
+      "commit": "60f9b8773d61dbda5ab372c2d91a6084b34247aa",
+      "tree": "113c97cb20141a6847959bed325de45006edf32d",
+      "file_count": 96
+    },
+    {
+      "name": "Card-Stablecoin-Payment-Optimizer",
+      "path": "projects/Card-Stablecoin-Payment-Optimizer",
+      "url": "https://github.com/vaibhavkapur/Card-Stablecoin-Payment-Optimizer",
+      "default_branch": "main",
+      "commit": "6cf059a97dcb98779c0498dcc34c281d412426e6",
+      "tree": "4178617c56c622923a9e506e19380cd32fce822b",
+      "file_count": 164
+    }
+  ]
+}

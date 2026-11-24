@@ -9,8 +9,8 @@ Use macOS or Linux with Bash, Git, Make, Go **1.27.1**, Node.js **20.20.2**, and
 ## Clone, Install, and Start
 
 ```bash
-git clone https://github.com/vaibhavkapur/Agent-Checkout.git
-cd Agent-Checkout
+git clone https://github.com/vaibhavkapur/Wallets.git
+cd Wallets/projects/Agent-Checkout
 make setup
 make test
 make dev

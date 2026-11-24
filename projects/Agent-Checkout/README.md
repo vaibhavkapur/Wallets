@@ -10,8 +10,8 @@ Built with Go, React, TypeScript, and PostgreSQL, with a durable file store for 
 
 ```bash
 # Requires Go 1.27.1, Node.js 20.20.2, npm, and Make
-git clone https://github.com/vaibhavkapur/Agent-Checkout.git
-cd Agent-Checkout
+git clone https://github.com/vaibhavkapur/Wallets.git
+cd Wallets/projects/Agent-Checkout
 make setup
 make test
 make dev

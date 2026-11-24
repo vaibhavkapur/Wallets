@@ -2,7 +2,13 @@ name: Agent Checkout
 
 on:
   push:
+    paths:
+      - 'projects/Agent-Checkout/**'
+      - '.github/workflows/agent-checkout.yml'
   pull_request:
+    paths:
+      - 'projects/Agent-Checkout/**'
+      - '.github/workflows/agent-checkout.yml'
 
 permissions:
   contents: read
@@ -10,6 +16,9 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: projects/Agent-Checkout
     services:
       postgres:
         image: postgres:17.6-alpine
@@ -24,18 +33,18 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: "1.27.1"
-          cache-dependency-path: backend/go.sum
+          cache-dependency-path: projects/Agent-Checkout/backend/go.sum
       - uses: actions/setup-node@v4
         with:
-          node-version-file: .nvmrc
+          node-version-file: projects/Agent-Checkout/.nvmrc
           cache: npm
-          cache-dependency-path: web/package-lock.json
+          cache-dependency-path: projects/Agent-Checkout/web/package-lock.json
       - run: make setup
       - run: make test
         env:
           TEST_DATABASE_URL: postgres://uno:uno_test@127.0.0.1:5432/uno?sslmode=disable
       - run: make build check-contracts
       - run: npx playwright install --with-deps chromium
-        working-directory: web
+        working-directory: projects/Agent-Checkout/web
       - run: npm run test:e2e
-        working-directory: web
+        working-directory: projects/Agent-Checkout/web

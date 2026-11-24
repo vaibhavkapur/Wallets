@@ -7,8 +7,8 @@
 Use Go 1.22+, a Rust stable toolchain (`rustup`), Node.js 20+ with npm, `jq`, and `curl`. PostgreSQL is not required: development and tests start an embedded PostgreSQL 16 (downloaded once into the OS temp directory). Docker is optional for the Compose topology.
 
 ```bash
-git clone https://github.com/vaibhavkapur/Agent-Spending-Accounts.git
-cd Agent-Spending-Accounts
+git clone https://github.com/vaibhavkapur/Wallets.git
+cd Wallets/projects/Agent-Spending-Accounts
 npm install
 make test
 make up

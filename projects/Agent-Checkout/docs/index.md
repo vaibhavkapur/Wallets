@@ -47,8 +47,8 @@ These guides describe the current implementation. The original [development plan
 
 These are independent companion repositories, not runtime dependencies or claims of implemented integrations:
 
-- [Cross-Merchant Procurement Agent](https://github.com/vaibhavkapur/Cross-Merchant-Procurement-Agent): supplier offers, company constraints, and protocol-specific checkout.
-- [Autonomous Price-Watch Buyer](https://github.com/vaibhavkapur/Autonomous-Price-Watch-Buyer): bounded purchase authority and recovery from concurrent triggers.
-- [Agent Authorization Wallet + Merchant Trust Gateway](https://github.com/vaibhavkapur/Agent-Authorization-Wallet-Merchant-Trust-Gateway): delegated authorization and merchant verification.
-- [Agentic Commerce Protocol Test Lab](https://github.com/vaibhavkapur/Agentic-Commerce-Protocol-Test-Lab): local protocol fixtures and failure testing.
-- [Agentic Commerce + Stablecoin Checkout](https://github.com/vaibhavkapur/Agentic-Commerce-Stablecoin-Checkout): conversational commerce and simulated stablecoin payment routing.
+- [Cross-Merchant Procurement Agent](https://github.com/vaibhavkapur/Agentic-Commerce/tree/main/projects/Cross-Merchant-Procurement-Agent): supplier offers, company constraints, and protocol-specific checkout.
+- [Autonomous Price-Watch Buyer](https://github.com/vaibhavkapur/Agentic-Commerce/tree/main/projects/Autonomous-Price-Watch-Buyer): bounded purchase authority and recovery from concurrent triggers.
+- [Agent Authorization Wallet + Merchant Trust Gateway](https://github.com/vaibhavkapur/Agentic-Commerce/tree/main/projects/Agent-Authorization-Wallet-Merchant-Trust-Gateway): delegated authorization and merchant verification.
+- [Agentic Commerce Protocol Test Lab](https://github.com/vaibhavkapur/Agentic-Commerce/tree/main/projects/Agentic-Commerce-Protocol-Test-Lab): local protocol fixtures and failure testing.
+- [Agentic Commerce + Stablecoin Checkout](https://github.com/vaibhavkapur/Stablecoins/tree/main/projects/Agentic-Commerce-Stablecoin-Checkout): conversational commerce and simulated stablecoin payment routing.

@@ -7,8 +7,8 @@
 Use Go 1.27+, a Rust toolchain via `rustup` (the workspace pins 1.99.0 with `clippy` and `rustfmt`), Node.js 20+ with npm, Python 3.9+, and `curl`. PostgreSQL is not required: development and tests start an embedded PostgreSQL 16 (downloaded once into the OS temp directory). Docker is not used.
 
 ```bash
-git clone https://github.com/vaibhavkapur/Card-Stablecoin-Payment-Optimizer.git
-cd Card-Stablecoin-Payment-Optimizer
+git clone https://github.com/vaibhavkapur/Wallets.git
+cd Wallets/projects/Card-Stablecoin-Payment-Optimizer
 make install      # npm workspaces
 make test         # Rust, reference check, Go, TypeScript
 make up           # local stack in assisted mode

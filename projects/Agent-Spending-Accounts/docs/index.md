@@ -43,8 +43,8 @@ The implementation guides describe the current code. [Development plan](../plan.
 
 These are independent companion repositories, not runtime dependencies or claims of an implemented integration:
 
-- [Agent Services Marketplace](https://github.com/vaibhavkapur/Agent-Services-Marketplace): research agent that discovers paid services over MCP and settles with x402 or MPP.
-- [Agent Authorization Wallet + Merchant Trust Gateway](https://github.com/vaibhavkapur/Agent-Authorization-Wallet-Merchant-Trust-Gateway): delegated purchase authority and transaction-integrity verification.
-- [Autonomous Price-Watch Buyer](https://github.com/vaibhavkapur/Autonomous-Price-Watch-Buyer): single-purchase agent with recovery from concurrent and uncertain outcomes.
-- [Smart Wallet Policy Engine](https://github.com/vaibhavkapur/Smart-Wallet-Policy-Engine): transaction risk evaluation and wallet authorization.
-- [Stablecoin Payments API](https://github.com/vaibhavkapur/Stablecoin-Payments-API): wallets, transfers, checkout, and double-entry ledger reconciliation.
+- [Agent Services Marketplace](https://github.com/vaibhavkapur/Agentic-Commerce/tree/main/projects/Agent-Services-Marketplace): research agent that discovers paid services over MCP and settles with x402 or MPP.
+- [Agent Authorization Wallet + Merchant Trust Gateway](https://github.com/vaibhavkapur/Agentic-Commerce/tree/main/projects/Agent-Authorization-Wallet-Merchant-Trust-Gateway): delegated purchase authority and transaction-integrity verification.
+- [Autonomous Price-Watch Buyer](https://github.com/vaibhavkapur/Agentic-Commerce/tree/main/projects/Autonomous-Price-Watch-Buyer): single-purchase agent with recovery from concurrent and uncertain outcomes.
+- [Smart Wallet Policy Engine](https://github.com/vaibhavkapur/Stablecoins/tree/main/projects/Smart-Wallet-Policy-Engine): transaction risk evaluation and wallet authorization.
+- [Stablecoin Payments API](https://github.com/vaibhavkapur/Stablecoins/tree/main/projects/Stablecoin-Payments-API): wallets, transfers, checkout, and double-entry ledger reconciliation.

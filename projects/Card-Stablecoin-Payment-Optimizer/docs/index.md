@@ -49,8 +49,8 @@ The implementation guides describe the current code. [Development plan](../plan.
 
 These are independent companion repositories, not runtime dependencies or claims of an implemented integration:
 
-- [Agent Spending Accounts](https://github.com/vaibhavkapur/Agent-Spending-Accounts): budgeted spending accounts for software agents with atomic reservations and single-use execution grants.
-- [Autonomous Price-Watch Buyer](https://github.com/vaibhavkapur/Autonomous-Price-Watch-Buyer): single-purchase agent with recovery from concurrent and uncertain outcomes.
-- [Agentic Commerce Stablecoin Checkout](https://github.com/vaibhavkapur/Agentic-Commerce-Stablecoin-Checkout): policy-controlled simulated USDC payments with merchant adapters and receipts.
-- [Stablecoin Payment Orchestrator](https://github.com/vaibhavkapur/Stablecoin-Payment-Orchestrator): routing of USD-denominated merchant payments as USDC transfers by cost, latency and reliability.
-- [Stablecoin Payments API](https://github.com/vaibhavkapur/Stablecoin-Payments-API): wallets, transfers, checkout and double-entry ledger reconciliation.
+- [Agent Spending Accounts](../../Agent-Spending-Accounts/): budgeted spending accounts for software agents with atomic reservations and single-use execution grants.
+- [Autonomous Price-Watch Buyer](https://github.com/vaibhavkapur/Agentic-Commerce/tree/main/projects/Autonomous-Price-Watch-Buyer): single-purchase agent with recovery from concurrent and uncertain outcomes.
+- [Agentic Commerce Stablecoin Checkout](https://github.com/vaibhavkapur/Stablecoins/tree/main/projects/Agentic-Commerce-Stablecoin-Checkout): policy-controlled simulated USDC payments with merchant adapters and receipts.
+- [Stablecoin Payment Orchestrator](https://github.com/vaibhavkapur/Stablecoins/tree/main/projects/Stablecoin-Payment-Orchestrator): routing of USD-denominated merchant payments as USDC transfers by cost, latency and reliability.
+- [Stablecoin Payments API](https://github.com/vaibhavkapur/Stablecoins/tree/main/projects/Stablecoin-Payments-API): wallets, transfers, checkout and double-entry ledger reconciliation.
