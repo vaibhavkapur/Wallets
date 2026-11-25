@@ -1,0 +1,110 @@
+{
+  "info": {
+    "description": "Timezone-aware recurring essentials reorder workflow with immutable rule versions, fresh quotes, exact approval binding, atomic monthly budget reservations, and payment/fulfillment reconciliation.",
+    "title": "Recurring Purchase Agent API",
+    "version": "1.0.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/healthz": {
+      "get": {
+        "summary": "Service health check"
+      }
+    },
+    "/v1/catalog": {
+      "get": {
+        "summary": "List narrow coffee and household essentials catalog and scoped payment methods"
+      }
+    },
+    "/v1/consents/{id}/revoke": {
+      "post": {
+        "summary": "Revoke an approval consent or delegated mandate"
+      }
+    },
+    "/v1/occurrences/{id}": {
+      "get": {
+        "summary": "Return scheduling, quote, proposal, checkout, payment, and fulfillment status"
+      }
+    },
+    "/v1/occurrences/{id}/cancel-order": {
+      "post": {
+        "summary": "Request merchant cancellation of an already-submitted order"
+      }
+    },
+    "/v1/occurrences/{id}/reconcile": {
+      "post": {
+        "summary": "Reconcile a timeout_unknown checkout without creating a duplicate charge"
+      }
+    },
+    "/v1/operator/pause": {
+      "post": {
+        "summary": "Operator-only product-level emergency pause control"
+      }
+    },
+    "/v1/proposals/{id}/approve": {
+      "post": {
+        "summary": "Approve an exact current proposal bound to rule version, quote digest, and amount"
+      }
+    },
+    "/v1/proposals/{id}/reject": {
+      "post": {
+        "summary": "Reject a pending purchase proposal without purchasing"
+      }
+    },
+    "/v1/recurring-rules": {
+      "post": {
+        "summary": "Create a recurring rule (v1) and its approval mode"
+      }
+    },
+    "/v1/recurring-rules/{id}": {
+      "patch": {
+        "summary": "Create a new immutable version of schedule and purchase constraints"
+      }
+    },
+    "/v1/recurring-rules/{id}/cancel": {
+      "post": {
+        "summary": "Cancel a recurring rule permanently"
+      }
+    },
+    "/v1/recurring-rules/{id}/mandates": {
+      "post": {
+        "summary": "Grant a scoped C3 delegated mandate for an eligible rule"
+      }
+    },
+    "/v1/recurring-rules/{id}/occurrences": {
+      "get": {
+        "summary": "Explain upcoming and past schedule occurrences for a rule"
+      }
+    },
+    "/v1/recurring-rules/{id}/pause": {
+      "post": {
+        "summary": "Pause a rule to block future occurrences (distinct from canceling submitted orders)"
+      }
+    },
+    "/v1/recurring-rules/{id}/resume": {
+      "post": {
+        "summary": "Resume a paused rule without generating catch-up purchases"
+      }
+    },
+    "/v1/recurring-rules/{id}/skip-next": {
+      "post": {
+        "summary": "Skip one identified upcoming schedule occurrence"
+      }
+    },
+    "/v1/session": {
+      "post": {
+        "summary": "Open a tenant-isolated customer or operator session"
+      }
+    },
+    "/v1/webhooks/merchant": {
+      "post": {
+        "summary": "HMAC-verified merchant webhook for fulfillment and partial/full refund updates"
+      }
+    },
+    "/v1/workspace": {
+      "get": {
+        "summary": "Fetch tenant rules, occurrences, proposals, consents, budgets, notifications, and audit log"
+      }
+    }
+  }
+}

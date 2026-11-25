@@ -16,3 +16,4 @@ Choose a project below and follow its README. Run setup, tests, and demos from t
 - [Card-versus-Stablecoin Payment Optimizer](projects/Card-Stablecoin-Payment-Optimizer/) — Compare the estimated cost of paying by card or stablecoin for the same basket, then hand off the customer's approved choice.
 - [Merchant-Funded Stablecoin Rewards](projects/Merchant-Funded-Stablecoin-Rewards/) — Prefund versioned merchant cashback campaigns with a double-entry ledger, signed order/refund ingestion, and idempotent Base USDC payouts.
 - [MyWallet](projects/MyWallet/) — Save and manage cards in a SwiftUI iPhone app. A Go backend verifies enrollment before the app displays a masked card.
+- [Recurring Purchase Agent](projects/Recurring-Purchase-Agent/) — Reorder predictable essentials on timezone-aware schedules with exact product and pack-size matching, approval binding, budget reservations, and timeout reconciliation.
